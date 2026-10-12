@@ -185,3 +185,6 @@ html, body { overflow-x: clip; }
   .brand-mark { height: 2rem; }
   header .container-x button { padding-inline: .35rem; }
 }
+
+/* The admin password fields have their own show/hide button: hide the browser's built-in one so two eyes are not shown. */
+input::-ms-reveal, input::-ms-clear { display: none; }
