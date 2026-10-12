@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useI18n } from "@/components/i18n/I18nProvider";
 
 const EXPLORE: [string, string][] = [["/", "nav.home"], ["/motorcycles", "nav.motorcycles"], ["/experience", "nav.studio"], ["/compare", "nav.compare"], ["/gallery", "nav.gallery"], ["/test-ride", "nav.testRide"]];
@@ -7,6 +8,7 @@ const COMPANY: [string, string][] = [["/about", "footer.about"], ["/contact", "f
 
 export function Footer() {
   const { t } = useI18n();
+  if (usePathname().startsWith("/admin")) return null;
   return (
     <footer className="mt-24 border-t border-line bg-surface">
       <div className="container-x grid gap-12 py-16 md:grid-cols-4">
@@ -27,7 +29,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="container-x border-t border-line py-6 text-xs text-muted">© {new Date().getFullYear()} {t("footer.copy")}</div>
+      <div className="container-x flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 text-xs text-muted"><span>© {new Date().getFullYear()} {t("footer.copy")}</span><Link href="/admin/login" rel="nofollow" className="hover:text-fg">Owner sign-in</Link></div>
     </footer>
   );
 }

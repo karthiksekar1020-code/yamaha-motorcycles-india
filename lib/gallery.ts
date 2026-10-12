@@ -5,7 +5,7 @@ export interface GalleryItem {
   id: string;
   title: string;
   caption: string;
-  kind: "Colour" | "Model" | "Your photo";
+  kind: "Colour" | "Model" | "Photo" | "Your photo";
   src: string;
   width: number;
   height: number;

@@ -20,6 +20,8 @@ export interface ModelImage {
 }
 
 export interface Motorcycle {
+  /** Database id. Absent for the built-in demo dataset. */
+  id?: string;
   slug: string;
   name: string;
   market: Market;
@@ -41,6 +43,13 @@ export interface Motorcycle {
   priceInr: number | null;
   availability: Availability;
   features: string[];
+  /** Colour options shown on the model page. */
+  colors: string[];
+  /** Highlighted on the homepage. */
+  isFeatured: boolean;
+  /** Draft models are visible only to the admin. */
+  isPublished: boolean;
+  sortOrder: number;
   sourceUrl: string | null;
   lastVerifiedAt: string | null;
   /** "demo" records are illustrative and MUST be verified before production use. */

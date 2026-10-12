@@ -15,6 +15,9 @@ import { CompareTray } from "@/components/compare/CompareTray";
 import { getBrandLogo } from "@/lib/brand";
 import { IntroLoader } from "@/components/layout/IntroLoader";
 import { MotionProvider } from "@/components/ui/MotionProvider";
+import { getPublishedContent } from "@/lib/content/server";
+import { contentToEnglishOverrides, DEFAULT_NAVIGATION, NAV_LABEL_KEY, type NavigationContent } from "@/lib/content/schema";
+import type { NavItem } from "@/components/layout/Header";
 
 const barlow = Barlow_Condensed({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-barlow", display: "swap" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -33,7 +36,7 @@ const scriptFonts = [deva, bengali, telugu, tamil, gujarati, kannada, malayalam,
 
 
 // Static string, no user input: sends a browser *reload* to the home page, at the top.
-const REFRESH_SCRIPT = `(function(){try{var n=performance.getEntriesByType("navigation")[0];if(!n||n.type!=="reload")return;if(location.pathname!=="/"||location.search||location.hash){location.replace("/");return}history.scrollRestoration="manual";var top=function(){scrollTo(0,0)};addEventListener("load",function(){top();setTimeout(top,120);setTimeout(top,500);setTimeout(function(){history.scrollRestoration="auto"},1500)})}catch(e){}})();`;
+const REFRESH_SCRIPT = `(function(){try{var n=performance.getEntriesByType("navigation")[0];if(!n||n.type!=="reload")return;if(location.pathname.indexOf("/admin")===0)return;if(location.pathname!=="/"||location.search||location.hash){location.replace("/");return}history.scrollRestoration="manual";var top=function(){scrollTo(0,0)};addEventListener("load",function(){top();setTimeout(top,120);setTimeout(top,500);setTimeout(function(){history.scrollRestoration="auto"},1500)})}catch(e){}})();`;
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -51,15 +54,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const saved = (await cookies()).get("ymi.lang")?.value;
   const lang = isLang(saved) ? saved : "en";
   const tag = LANGS.find((l) => l.code === lang)!.tag;
+  // Wording the owner published from the admin replaces the English text; other languages keep their own translations.
+  const content = await getPublishedContent();
+  const dict = lang === "en" ? { ...MESSAGES.en, ...contentToEnglishOverrides(content) } : MESSAGES[lang];
+  const navConfig = (content.navigation as NavigationContent | undefined) ?? DEFAULT_NAVIGATION;
+  const nav: NavItem[] = navConfig.items.filter((i) => i.visible).map((i) => ({ href: i.href, key: NAV_LABEL_KEY[i.href], label: i.label }));
   return (
     <html suppressHydrationWarning lang={tag} data-script={lang === "en" ? "latin" : "indic"} className={`${barlow.variable} ${inter.variable} ${scriptFonts}`}>
       {REFRESH_GOES_HOME && <head><script dangerouslySetInnerHTML={{ __html: REFRESH_SCRIPT }} /></head>}
       <body>
         <MotionProvider>
         <IntroLoader oncePerSession={INTRO_ONCE_PER_SESSION} logoSrc={logoSrc} />
-        <I18nProvider initialLang={lang} initialDict={MESSAGES[lang]}>
+        <I18nProvider initialLang={lang} initialDict={dict}>
           <CompareProvider>
-            <Header logoSrc={logoSrc} />
+            <Header logoSrc={logoSrc} nav={nav} />
             <main id="main">{children}</main>
             <Footer />
             <CompareTray />

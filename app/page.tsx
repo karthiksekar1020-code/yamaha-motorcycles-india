@@ -8,7 +8,10 @@ import { EngineeringSection } from "@/components/home/EngineeringSection";
 import { ENGINEERING_MODELS } from "@/lib/engineering";
 import { ComparisonPreview } from "@/components/home/ComparisonPreview";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
-import { GALLERY } from "@/lib/gallery";
+import { getGalleryItems } from "@/lib/gallery-server";
+import { getPublishedContent } from "@/lib/content/server";
+import { PromoBanner } from "@/components/home/PromoBanner";
+import type { PromoContent } from "@/lib/content/schema";
 import { LazyVideo } from "@/components/ui/LazyVideo";
 
 export const dynamic = "force-dynamic";
@@ -20,8 +23,10 @@ export default async function HomePage() {
   }
   if (all.length === 0) return <section className="container-x pt-40"><h1 className="display text-4xl">No motorcycles listed yet</h1></section>;
 
-  const ordered = [...all].sort((a, b) => Number(a.availability === "upcoming") - Number(b.availability === "upcoming") || Number(Boolean(b.image)) - Number(Boolean(a.image)) || Number(b.market === "India") - Number(a.market === "India") || (b.engineCc ?? 0) - (a.engineCc ?? 0));
-  const hero = ordered.find((m) => m.category === "Supersport") ?? ordered[0]!;
+  const [gallery, content] = await Promise.all([getGalleryItems(), getPublishedContent()]);
+  // Models the owner marked as featured come first; the rest keep the original ordering.
+  const ordered = [...all].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured) || Number(a.availability === "upcoming") - Number(b.availability === "upcoming") || Number(Boolean(b.image)) - Number(Boolean(a.image)) || Number(b.market === "India") - Number(a.market === "India") || (b.engineCc ?? 0) - (a.engineCc ?? 0));
+  const hero = ordered.find((m) => m.isFeatured) ?? ordered.find((m) => m.category === "Supersport") ?? ordered[0]!;
   const featured = ordered.slice(0, 4);
   const engineeringModels = ENGINEERING_MODELS.flatMap(({ slug }) => {
     const m = all.find((x) => x.slug === slug);
@@ -32,13 +37,14 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection motorcycle={hero} />
+      <PromoBanner promo={content.promo as PromoContent | undefined} />
       <FeaturedStage models={featured} />
       <CategoryShowcase all={all} />
       <EngineeringSection models={engineeringModels} />
       <ComparisonPreview models={all} />
       <section className="container-x pb-20 md:pb-28">
         <div className="flex items-end justify-between"><div><p className="micro"><T k="home.gallery" /></p><h2 className="display mt-2 text-3xl md:text-5xl"><T k="home.inFocus" /></h2></div><Link href="/gallery" className="link-underline micro !text-fg"><T k="home.viewAll" /></Link></div>
-        <div className="mt-8"><GalleryGrid items={GALLERY.slice(0, 6)} /></div>
+        <div className="mt-8"><GalleryGrid items={gallery.slice(0, 6)} /></div>
         <div className="mt-10 text-center"><Link href="/gallery" className="btn">View full image gallery</Link></div>
       </section>
       <section className="relative isolate overflow-hidden border-t border-line py-28 text-center md:py-40">

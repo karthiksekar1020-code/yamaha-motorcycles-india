@@ -7,7 +7,7 @@ import { useCompare } from "./CompareProvider";
 export function CompareTray() {
   const { items, remove, clear } = useCompare();
   const path = usePathname();
-  if (items.length === 0 || path === "/compare") return null;
+  if (items.length === 0 || path === "/compare" || path.startsWith("/admin")) return null;
   const ready = items.length >= 2;
   return (
     <div role="region" aria-label="Comparison selection" className="fixed inset-x-0 bottom-0 z-40 border-t border-blue bg-surface/95 backdrop-blur">

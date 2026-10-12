@@ -14,7 +14,9 @@ const loadSearch = () => import("./SearchOverlay");
 const SearchOverlay = dynamic(() => loadSearch().then((m) => m.SearchOverlay));
 const preloadSearch = () => { void loadSearch(); }; // warm the chunk when the pointer nears the button
 
-export const NAV = [
+export interface NavItem { href: string; /** translation key used for every language other than English */ key: string; /** owner-edited English wording, if any */ label?: string }
+
+export const DEFAULT_NAV: NavItem[] = [
   { href: "/", key: "nav.home" },
   { href: "/motorcycles", key: "nav.motorcycles" },
   { href: "/experience", key: "nav.studio" },
@@ -22,10 +24,11 @@ export const NAV = [
   { href: "/gallery", key: "nav.gallery" },
 ];
 
-export function Header({ logoSrc = null }: { logoSrc?: string | null }) {
+export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string | null; nav?: NavItem[] }) {
   const path = usePathname();
   const { slugs } = useCompare();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const label = (n: NavItem) => (n.label && lang === "en" ? n.label : t(n.key));
   const [solid, setSolid] = useState(false);
   const [menu, setMenu] = useState(false);
   const [search, setSearch] = useState(false);
@@ -40,6 +43,7 @@ export function Header({ logoSrc = null }: { logoSrc?: string | null }) {
   useEffect(() => setMenu(false), [path]);
 
   const active = (href: string) => path === href || path.startsWith(href + "/");
+  if (path.startsWith("/admin")) return null; // the admin area has its own layout
 
   return (
     <>
@@ -55,9 +59,9 @@ export function Header({ logoSrc = null }: { logoSrc?: string | null }) {
             </span>
           </Link>
           <nav aria-label="Primary" className="hidden items-center gap-5 lg:flex xl:gap-8">
-            {NAV.map((n) => (
+            {nav.map((n) => (
               <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined} className="link-underline micro whitespace-nowrap !text-fg">
-                {t(n.key)}
+                {label(n)}
                 {n.href === "/compare" && slugs.length > 0 && <span className="ml-1.5 rounded-full bg-blue px-1.5 py-0.5 text-[10px] leading-none">{slugs.length}</span>}
               </Link>
             ))}
@@ -65,7 +69,7 @@ export function Header({ logoSrc = null }: { logoSrc?: string | null }) {
           <div className="flex items-center gap-1 sm:gap-2">
             <button onClick={() => { setSearched(true); setSearch(true); }} onPointerEnter={preloadSearch} onFocus={preloadSearch} aria-label={t("nav.search")} className="p-2.5 hover:text-blue-bright"><Search size={20} /></button>
             <LanguageSwitcher />
-            <Link href="/login" className="micro px-2.5 py-2 !text-fg hover:!text-blue-bright max-sm:hidden!">Login</Link>
+            <Link href="/admin/login" rel="nofollow" className="micro px-2.5 py-2 !text-fg hover:!text-blue-bright max-sm:hidden!">Login</Link>
             <Link href="/test-ride" className="btn btn-sm ml-1 whitespace-nowrap max-sm:hidden!">{t("nav.testRide")}</Link>
             <button onClick={() => setMenu(true)} aria-label={t("nav.openMenu")} aria-haspopup="dialog" className="p-2.5 lg:hidden"><Menu size={22} /></button>
           </div>
@@ -76,11 +80,11 @@ export function Header({ logoSrc = null }: { logoSrc?: string | null }) {
         <div className="flex h-full flex-col border-l border-line bg-surface p-6">
           <button onClick={() => setMenu(false)} aria-label={t("nav.closeMenu")} className="mb-8 self-end p-2"><X size={24} /></button>
           <nav aria-label="Mobile" className="flex flex-col">
-            {NAV.map((n) => (
-              <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined} className="display border-b border-line py-4 text-3xl aria-[current=page]:text-blue-bright">{t(n.key)}</Link>
+            {nav.map((n) => (
+              <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined} className="display border-b border-line py-4 text-3xl aria-[current=page]:text-blue-bright">{label(n)}</Link>
             ))}
           </nav>
-          <Link href="/login" className="display border-b border-line py-4 text-3xl aria-[current=page]:text-blue-bright" aria-current={path === "/login" ? "page" : undefined}>Login</Link>
+          <Link href="/admin/login" rel="nofollow" className="display border-b border-line py-4 text-3xl">Login</Link>
           <Link href="/test-ride" className="btn mt-auto">{t("nav.requestTestRide")}</Link>
         </div>
       </ModalDialog>

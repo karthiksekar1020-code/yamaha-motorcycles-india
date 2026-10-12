@@ -1,10 +1,13 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, ImagePlus, Trash2, X } from "lucide-react";
 import { m as motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/utils/hooks";
 import { ModalDialog } from "@/components/ui/ModalDialog";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { api } from "@/lib/admin/client";
 import { ACCEPT, MAX_FILE_MB, MAX_PHOTOS, deletePhoto, listPhotos, savePhoto, shrink } from "./myPhotos";
 import type { GalleryItem } from "@/lib/gallery";
 
@@ -23,7 +26,16 @@ const toItem = (id: string, name: string, url: string): Item => {
   return { id: `mine-${id}`, title, caption: "Added from this device. Only you can see it; it is stored in this browser.", kind: "Your photo", src: url, width: 1600, height: 1067, alt: title, mine: true };
 };
 
-export function GalleryGrid({ items: base, viewerTile = false }: { items: GalleryItem[]; viewerTile?: boolean }) {
+/**
+ * `canRemove` is true only when the SERVER confirmed the visitor is the signed-in owner. It only decides whether the
+ * buttons are drawn: the actual removal is refused by the server and the database unless the request comes from the owner.
+ */
+export function GalleryGrid({ items: base, viewerTile = false, canRemove = false }: { items: GalleryItem[]; viewerTile?: boolean; canRemove?: boolean }) {
+  const router = useRouter();
+  const [removed, setRemoved] = useState<Set<string>>(new Set());
+  const [toRemove, setToRemove] = useState<Item | null>(null);
+  const [removing, setRemoving] = useState(false);
+  const [removeError, setRemoveError] = useState("");
   const [open, setOpen] = useState<number | null>(null);
   const [mine, setMine] = useState<Item[]>([]);
   const [status, setStatus] = useState("");
@@ -44,7 +56,7 @@ export function GalleryGrid({ items: base, viewerTile = false }: { items: Galler
     return () => { off = true; map.forEach((u) => URL.revokeObjectURL(u)); map.clear(); };
   }, [viewerTile]);
 
-  const items: Item[] = viewerTile ? [...base, ...mine] : base;
+  const items: Item[] = (viewerTile ? [...base, ...mine] : base).filter((x) => !removed.has(x.id));
   const step = useCallback((d: number) => setOpen((i) => (i === null ? i : (i + d + items.length) % items.length)), [items.length]);
 
   useEffect(() => {
@@ -92,6 +104,24 @@ export function GalleryGrid({ items: base, viewerTile = false }: { items: Galler
     setStatus("Photo removed.");
   };
 
+  // Owner removal of a built-in or uploaded photo goes through the protected API; a visitor's own device photo is just deleted locally.
+  const confirmRemove = async () => {
+    const it = toRemove;
+    if (!it) return;
+    setRemoving(true); setRemoveError("");
+    if (it.mine) { await removeMine(it); setRemoving(false); setToRemove(null); return; }
+    const res = it.id.startsWith("upload-")
+      ? await api(`/api/admin/gallery/${it.id.slice("upload-".length)}`, { method: "DELETE" })
+      : await api("/api/admin/gallery/hide", { json: { itemId: it.id } });
+    setRemoving(false);
+    if (!res.ok) { setRemoveError(res.status === 401 || res.status === 403 ? "Your owner session has ended. Sign in again to remove photos." : res.error.message); return; }
+    setRemoved((r) => new Set(r).add(it.id));
+    setOpen(null); setToRemove(null);
+    setStatus(`Removed “${it.title}” from the gallery.`);
+    router.refresh(); // re-read the gallery from the server so the page matches the database
+  };
+  const mayRemove = (it: Item) => Boolean(it.mine) || canRemove;
+
   const g = open === null ? null : items[open]!;
   const gap = (3 - (items.length % 3)) % 3;
   const narrow = gap === 1; // the tile has a single column on desktop: drop the photo stack and shrink the text
@@ -106,7 +136,16 @@ export function GalleryGrid({ items: base, viewerTile = false }: { items: Galler
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "0px 0px -8% 0px" }}
             transition={{ duration: 0.75, delay: (i % 3) * 0.12, ease: [0.22, 1, 0.36, 1] }}
+            className="relative"
           >
+            {mayRemove(it) && (
+              <button
+                onClick={() => { setRemoveError(""); setToRemove(it); }}
+                aria-label={`Remove photo: ${it.title}`}
+                title="Remove this photo"
+                className="absolute right-2 top-2 z-10 grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-black/70 text-white backdrop-blur transition-colors hover:border-danger hover:bg-danger"
+              ><Trash2 size={16} aria-hidden /></button>
+            )}
             <button onClick={() => setOpen(i)} aria-label={`Open image: ${it.title}`} aria-haspopup="dialog" className="gallery-card group relative block aspect-[3/2] w-full overflow-hidden border border-line text-left hover:border-blue-bright">
               <motion.div
                 className="absolute inset-0"
@@ -169,13 +208,29 @@ export function GalleryGrid({ items: base, viewerTile = false }: { items: Galler
             <div className="mx-auto max-w-3xl text-center">
               <h3 className="display text-2xl">{g.title}</h3>
               <p className="mt-1 text-sm text-muted">{g.caption}</p>
-              {(g as Item).mine && (
-                <button onClick={() => removeMine(g as Item)} className="btn btn-ghost btn-sm mt-3"><Trash2 size={16} /> Remove this photo</button>
+              {mayRemove(g as Item) && (
+                <button onClick={() => { setRemoveError(""); setToRemove(g as Item); }} className="btn btn-ghost btn-sm mt-3"><Trash2 size={16} /> Remove this photo</button>
               )}
             </div>
           </div>
         )}
       </ModalDialog>
+
+      <ConfirmDialog
+        open={toRemove !== null}
+        title="Remove this photo?"
+        confirmLabel="Remove photo"
+        busy={removing}
+        error={removeError}
+        onConfirm={confirmRemove}
+        onCancel={() => { setToRemove(null); setRemoveError(""); }}
+      >
+        {toRemove?.mine
+          ? "This deletes the photo you added from this browser."
+          : toRemove?.id.startsWith("upload-")
+            ? `“${toRemove.title}” is deleted from the website and from storage. This cannot be undone.`
+            : `“${toRemove?.title}” is taken off the public gallery for everyone. You can restore it later from Admin → Gallery.`}
+      </ConfirmDialog>
     </>
   );
 }

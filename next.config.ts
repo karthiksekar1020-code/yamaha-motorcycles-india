@@ -5,8 +5,29 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
 ];
+
+// Content-Security-Policy. The browser only ever talks to this site (all Supabase calls are made by the server), so
+// connect-src is 'self'; nothing can be framed, no plugins, no <base> hijacking, forms only post back here.
+// script-src keeps 'unsafe-inline' because Next.js bootstrap scripts and two tiny inline scripts of ours (intro and
+// reload handling) need it; moving to per-request nonces is the next hardening step. Production only: the dev server
+// needs eval for hot reload.
+const csp = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "img-src 'self' data: blob:",
+  "media-src 'self' blob:",
+  "font-src 'self' data:",
+  "style-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline'",
+  "connect-src 'self'",
+].join("; ");
+if (process.env.NODE_ENV === "production") securityHeaders.push({ key: "Content-Security-Policy", value: csp });
 
 // Files in /public are not fingerprinted, so give them a week plus a day of stale-while-revalidate instead of
 // the default "revalidate on every request". Rename a file when replacing it to bypass the cache sooner.
