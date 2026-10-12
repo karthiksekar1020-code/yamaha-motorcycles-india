@@ -84,7 +84,7 @@ export function MfaCard({ factorId }: { factorId: string | null }) {
       {!factorId && !setup && <div className="mt-4"><button onClick={start} disabled={busy} className="btn btn-sm">{busy ? "Starting…" : "Set up an authenticator app"}</button></div>}
 
       {setup && (
-        <form onSubmit={confirm} noValidate className="mt-5 grid max-w-2xl gap-6 sm:grid-cols-[180px_1fr]">
+        <form onSubmit={confirm} noValidate className="mt-5 grid grid-cols-1 max-w-2xl gap-6 sm:grid-cols-[180px_1fr]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={setup.qrCode} alt="QR code to scan with your authenticator app" width={180} height={180} className="bg-white p-2" />
           <div className="space-y-3">

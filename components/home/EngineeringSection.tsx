@@ -63,8 +63,8 @@ export function EngineeringSection({ models }: { models: EngineeringModel[] }) {
 
   return (
     <section className="border-y border-line bg-surface py-20 md:py-28">
-      <div className="container-x grid items-center gap-12 lg:grid-cols-2">
-        <div>
+      <div className="container-x grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+        <div className="min-w-0">
           <p className="micro">{t("home.engineering")}</p>
           <h2 className="display mt-2 text-4xl md:text-6xl">{t("home.builtAround")}</h2>
           <p className="mt-6 max-w-md text-muted">Select a point on the machine, or switch bikes, to read how that system is built on each model.</p>
@@ -77,14 +77,14 @@ export function EngineeringSection({ models }: { models: EngineeringModel[] }) {
               </motion.div>
             </AnimatePresence>
           </div>
-          <div className="mt-4 flex gap-2" role="group" aria-label="Component selector">
+          <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Component selector">
             {HOTSPOTS.map((h) => (
               <button key={h.id} aria-pressed={active.id === h.id} onClick={() => setActive(h)} className="border border-line px-4 py-2 text-xs font-semibold uppercase tracking-[.14em] aria-pressed:border-blue-bright aria-pressed:bg-blue/25">{h.label}</button>
             ))}
           </div>
         </div>
 
-        <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+        <div className="min-w-0" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
           <div ref={box} onMouseMove={onMove} onMouseLeave={onLeave} className="relative aspect-[3/2] overflow-hidden border border-line bg-[radial-gradient(70%_70%_at_50%_60%,rgba(22,119,255,.25),transparent)] transition-shadow duration-500 hover:shadow-[0_0_60px_rgba(22,119,255,.35)]">
             {!reduced && <motion.div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={{ background: spotlight }} />}
             {!reduced && <motion.div key={`${m.slug}-sweep`} aria-hidden className="pointer-events-none absolute inset-y-0 z-10 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" initial={{ left: "-40%" }} animate={{ left: "120%" }} transition={{ duration: 1.1, ease: "easeInOut" }} />}

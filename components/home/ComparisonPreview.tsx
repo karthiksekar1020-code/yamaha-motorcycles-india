@@ -26,7 +26,7 @@ export function ComparisonPreview({ models }: { models: Motorcycle[] }) {
     <section className="container-x overflow-x-clip py-20 md:py-28">
       <p className="micro">{t("home.compare")}</p>
       <h2 className="display mt-2 text-4xl md:text-6xl">{t("home.precision")}</h2>
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
+      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
         {[[A, select("cmp-a", "First motorcycle", a, setA)], [B, select("cmp-b", "Second motorcycle", b, setB)]].map(([m, sel], i) => (
           // Panels slide in from opposite sides on scroll; the bike slides out and the new one slides in when the model changes.
           <motion.div

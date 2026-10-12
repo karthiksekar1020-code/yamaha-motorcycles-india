@@ -59,7 +59,7 @@ export function FeaturedStage({ models }: { models: Motorcycle[] }) {
 
         <div className="relative mt-6 min-h-[360px] md:min-h-[380px]" aria-live="polite">
           <AnimatePresence mode="wait">
-            <motion.div key={m.slug} initial={reduced ? false : { opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={reduced ? undefined : { opacity: 0, x: -40 }} transition={{ duration: 0.35 }} className="grid gap-8 md:grid-cols-[1fr_1.3fr] md:items-center">
+            <motion.div key={m.slug} initial={reduced ? false : { opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={reduced ? undefined : { opacity: 0, x: -40 }} transition={{ duration: 0.35 }} className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_1.3fr] md:items-center">
               <div>
                 <p className="micro">{m.category}{m.engineCc ? ` · ${m.engineCc} cc class` : ""}</p>
                 <h2 className="display mt-2 text-4xl md:text-6xl">{m.name}</h2>

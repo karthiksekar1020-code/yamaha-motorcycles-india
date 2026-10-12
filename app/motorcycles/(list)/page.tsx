@@ -42,7 +42,7 @@ export default async function MotorcyclesPage({ searchParams }: { searchParams: 
           <p className="mt-4 max-w-2xl text-muted"><T k="page.motorcycles.intro" /></p>
         </div>
       </section>
-      <section className="container-x grid gap-10 py-12 lg:grid-cols-[260px_1fr]">
+      <section className="container-x grid grid-cols-1 gap-10 py-12 lg:grid-cols-[260px_1fr]">
         <div className="lg:sticky lg:top-24 lg:max-h-[calc(100svh-7rem)] lg:self-start lg:overflow-y-auto lg:pr-2">
           <Suspense fallback={<div className="skeleton h-40" />}><MotorcycleFilters initialQ={query.q ?? ""} /></Suspense>
         </div>

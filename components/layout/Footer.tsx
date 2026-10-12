@@ -11,7 +11,7 @@ export function Footer() {
   if (usePathname().startsWith("/admin")) return null;
   return (
     <footer className="mt-24 border-t border-line bg-surface">
-      <div className="container-x grid gap-12 py-16 md:grid-cols-4">
+      <div className="container-x grid grid-cols-1 gap-12 py-16 md:grid-cols-4">
         <div className="md:col-span-2">
           <p className="display text-3xl tracking-[.14em]">YAMAHA MOTORCYCLES INDIA</p>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">{t("footer.blurb")}</p>

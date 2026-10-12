@@ -16,7 +16,7 @@ export function StudioClient({ all, initialSlug }: { all: Motorcycle[]; initialS
     window.history.replaceState(null, "", `/experience?model=${encodeURIComponent(next)}`);
   };
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
       <ImageGallery key={m.slug} m={m} />
       <aside className="space-y-6">
         <div>

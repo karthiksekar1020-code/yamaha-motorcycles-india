@@ -89,7 +89,7 @@ export function MotorcycleForm({ id, initial }: { id?: string; initial?: Motorcy
       {err(k) && <div id={`${k}-err`}><FieldError msg={err(k)} /></div>}
     </div>
   );
-  const group = (title: string, children: React.ReactNode) => <fieldset className="border border-line p-5"><legend className="display px-2 text-xl">{title}</legend><div className="grid gap-5 sm:grid-cols-2">{children}</div></fieldset>;
+  const group = (title: string, children: React.ReactNode) => <fieldset className="border border-line p-5"><legend className="display px-2 text-xl">{title}</legend><div className="grid grid-cols-1 gap-5 sm:grid-cols-2">{children}</div></fieldset>;
   const powerErr = useMemo(() => err("power") ?? err("torque"), [errors]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

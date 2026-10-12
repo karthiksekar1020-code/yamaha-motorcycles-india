@@ -24,7 +24,7 @@ export function MotorcycleView({ m, related }: { m: Motorcycle; related: Motorcy
         <div className="container-x mt-8"><MediaStage m={m} /></div>
       </section>
 
-      <section className="container-x grid gap-12 py-16 lg:grid-cols-[1.1fr_1fr]">
+      <section className="container-x grid grid-cols-1 gap-12 py-16 lg:grid-cols-[1.1fr_1fr]">
         <div>
           <h2 className="display text-3xl">Overview</h2>
           <p className="mt-4 max-w-xl leading-relaxed text-muted">{m.description}</p>
@@ -56,7 +56,7 @@ export function MotorcycleView({ m, related }: { m: Motorcycle; related: Motorcy
       <section className="border-t border-line bg-surface py-16">
         <div className="container-x">
           <h2 className="display text-3xl">Related motorcycles</h2>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{related.map((r, i) => <MotorcycleCard key={r.slug} m={r} index={i} />)}</div>
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">{related.map((r, i) => <MotorcycleCard key={r.slug} m={r} index={i} />)}</div>
         </div>
       </section>
     </>

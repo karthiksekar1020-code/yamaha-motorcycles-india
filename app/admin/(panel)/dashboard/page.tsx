@@ -34,7 +34,7 @@ export default async function DashboardPage() {
         <Link href="/admin/gallery" className="btn btn-ghost btn-sm">Upload photos</Link>
       </PageHeader>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {stats.map(({ label, value, sub, href, icon: Icon }) => (
           <Link key={label} href={href} className="group border border-line bg-surface p-5 transition-colors hover:border-blue-bright">
             <div className="flex items-center justify-between"><p className="micro">{label}</p><Icon size={18} className="text-blue-bright" aria-hidden /></div>

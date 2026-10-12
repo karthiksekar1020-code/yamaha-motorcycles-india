@@ -81,7 +81,7 @@ export function TestRideForm({ models, defaultModel }: { models: { slug: string;
   const inv = (k: keyof TestRideInput) => ({ "aria-invalid": errors[k] ? true : undefined, "aria-describedby": errors[k] ? `${k}-err` : undefined });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="grid gap-5 md:grid-cols-2">
+    <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-5 md:grid-cols-2">
       {result?.kind === "error" && (
         <div ref={alertRef} tabIndex={-1} role="alert" className="border border-danger/60 bg-danger/10 p-4 text-sm md:col-span-2">{result.message}</div>
       )}

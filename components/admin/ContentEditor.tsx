@@ -98,7 +98,7 @@ export function ContentEditor({ blocks }: { blocks: Record<ContentKey, BlockStat
 
         {tab === "hero" && (
           <>
-            <div className="grid gap-5 sm:grid-cols-2">{HERO_FIELDS.map((f) => textField(`hero:${f.k}`, f.label, hero[f.k], (v) => setValue({ ...hero, [f.k]: v }), f.max, f.multi))}</div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">{HERO_FIELDS.map((f) => textField(`hero:${f.k}`, f.label, hero[f.k], (v) => setValue({ ...hero, [f.k]: v }), f.max, f.multi))}</div>
             <div className="mt-6 border border-line bg-[radial-gradient(60%_80%_at_80%_50%,rgba(22,119,255,.22),#050c24)] p-6" aria-label="Preview of the hero text">
               <p className="micro !text-blue-bright">{hero.eyebrow}</p>
               <p className="display mt-2 text-4xl">{hero.line1} <span className="text-blue-bright">{hero.line2}</span></p>
@@ -107,7 +107,7 @@ export function ContentEditor({ blocks }: { blocks: Record<ContentKey, BlockStat
             </div>
           </>
         )}
-        {tab === "home" && <div className="grid gap-5 sm:grid-cols-2">{HOME_FIELDS.map((f) => textField(`home:${f.k}`, f.label, home[f.k], (v) => setValue({ ...home, [f.k]: v }), f.max))}</div>}
+        {tab === "home" && <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">{HOME_FIELDS.map((f) => textField(`home:${f.k}`, f.label, home[f.k], (v) => setValue({ ...home, [f.k]: v }), f.max))}</div>}
 
         {tab === "navigation" && (
           <div>
@@ -130,7 +130,7 @@ export function ContentEditor({ blocks }: { blocks: Record<ContentKey, BlockStat
         )}
 
         {tab === "promo" && (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <label className="flex items-start gap-3 sm:col-span-2"><input type="checkbox" checked={promo.enabled} onChange={(e) => setValue({ ...promo, enabled: e.target.checked })} className="mt-1 h-5 w-5 accent-[#1677ff]" /><span><span className="block font-semibold">Show the banner</span><span className="text-sm text-muted">Visible to everyone once published.</span></span></label>
             <div className="sm:col-span-2"><label htmlFor="promo-text" className="micro mb-2 block">Banner text <span className="normal-case tracking-normal text-muted">({promo.text.length}/160)</span></label><input id="promo-text" className="field" maxLength={180} value={promo.text} onChange={(e) => setValue({ ...promo, text: e.target.value })} aria-invalid={errors.text ? true : undefined} /><FieldError msg={errors.text} /></div>
             <div><label htmlFor="promo-label" className="micro mb-2 block">Link label (optional)</label><input id="promo-label" className="field" maxLength={40} value={promo.linkLabel} onChange={(e) => setValue({ ...promo, linkLabel: e.target.value })} /></div>

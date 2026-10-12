@@ -57,7 +57,7 @@ export function DealerSearch() {
           </p>
         )}
         {state.kind === "results" && state.dealers.length > 0 && (
-          <ul className="grid gap-4 md:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {state.dealers.map((d) => (
               <li key={d.id} className="border border-line p-5">
                 {!d.isVerified && <p className="micro mb-2 !text-blue-bright">Unverified listing</p>}

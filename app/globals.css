@@ -171,3 +171,17 @@ html[data-intro="play"] .brand-mark { opacity: 0; }
   .auth-bike { animation: auth-slide 1.1s cubic-bezier(.16, 1, .3, 1) both; }
   .auth-bike > img { animation: auth-float 6s ease-in-out 1.2s infinite; }
 }
+
+/* Responsive safety net: a stray wide element can never make the page scroll sideways (clip, unlike hidden, keeps sticky/fixed working). */
+html, body { overflow-x: clip; }
+/* Very narrow phones (under 350px): the header cannot fit the tagline next to its three buttons. */
+@media (max-width: 349px) {
+  .logo-lockup .l2 { display: none; }
+}
+/* Extremely narrow screens (foldables, 280-319px): shrink the header so the menu button stays on screen. */
+@media (max-width: 319px) {
+  header .container-x { padding-inline: .75rem; }
+  .logo-lockup .l1 { font-size: 1.15rem; letter-spacing: .08em; }
+  .brand-mark { height: 2rem; }
+  header .container-x button { padding-inline: .35rem; }
+}

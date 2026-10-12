@@ -21,7 +21,7 @@ export function CategoryShowcase({ all }: { all: Motorcycle[] }) {
     <section className="container-x py-20 md:py-28">
       <p className="micro"><T k="home.chooseRide" /></p>
       <h2 className="display mt-2 text-3xl md:text-5xl"><T k="home.categories" /></h2>
-      <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {CATEGORIES.filter((c) => all.some((m) => m.category === c)).map((c, i) => {
           const inCat = all.filter((m) => m.category === c);
           const india = inCat.filter((m) => m.market === "India").length;

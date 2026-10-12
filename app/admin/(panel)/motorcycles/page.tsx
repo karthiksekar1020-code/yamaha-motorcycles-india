@@ -37,7 +37,7 @@ export default async function MotorcyclesPage({ searchParams }: { searchParams: 
         <Link href="/admin/motorcycles/new" className="btn btn-sm">Add motorcycle</Link>
       </PageHeader>
 
-      <form method="get" role="search" className="mb-6 grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
+      <form method="get" role="search" className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
         <div><label htmlFor="q" className="sr-only">Search models</label><input id="q" name="q" defaultValue={q} placeholder="Search by name or slug" className="field" /></div>
         <div><label htmlFor="status" className="sr-only">Status</label>
           <select id="status" name="status" defaultValue={status} className="field"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Draft</option></select></div>

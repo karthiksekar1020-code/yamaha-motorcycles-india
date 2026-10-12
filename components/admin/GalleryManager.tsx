@@ -152,7 +152,7 @@ export function GalleryManager({ initial, models }: { initial: GalleryItemData[]
                 </li>
               ))}
             </ul>
-            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div><label htmlFor="up-caption" className="micro mb-2 block">Caption (optional)</label><input id="up-caption" className="field" maxLength={200} value={caption} onChange={(e) => setCaption(e.target.value)} /></div>
               <div><label htmlFor="up-alt" className="micro mb-2 block">Alt text (optional)</label><input id="up-alt" className="field" maxLength={300} value={altText} onChange={(e) => setAltText(e.target.value)} /></div>
               <div><label htmlFor="up-model" className="micro mb-2 block">Link to a model (optional)</label>
@@ -182,7 +182,7 @@ export function GalleryManager({ initial, models }: { initial: GalleryItemData[]
         {items.length === 0 ? (
           <div className="mt-4"><EmptyState title="No uploaded photos yet">Photos you upload appear here. The built-in official photos on the website are not listed.</EmptyState></div>
         ) : (
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {items.map((it, i) => (
               <li key={it.id} className="flex flex-col border border-line bg-surface">
                 <div className="relative aspect-[3/2] bg-bg">

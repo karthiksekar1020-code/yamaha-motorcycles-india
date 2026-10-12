@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
  */
 export function AuthShell({ title, intro, children, footer }: { title: string; intro?: string; children: ReactNode; footer?: ReactNode }) {
   return (
-    <div className="grid min-h-[100svh] lg:grid-cols-[1.1fr_1fr]">
+    <div className="grid grid-cols-1 min-h-[100svh] lg:grid-cols-[1.1fr_1fr]">
       <aside aria-hidden className="auth-hero relative hidden overflow-hidden border-r border-line lg:block">
         <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_60%_55%,rgba(22,119,255,.32),transparent),linear-gradient(160deg,#07123a,#030818_70%)]" />
         <div className="absolute inset-0 opacity-60 [background:repeating-linear-gradient(115deg,transparent_0_70px,rgba(255,255,255,.035)_70px_71px)]" />

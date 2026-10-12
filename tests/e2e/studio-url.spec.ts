@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("studio keeps the chosen model in the URL, so the link opens on the same bike", async ({ page }) => {
   await page.goto("/experience");
+  await page.waitForLoadState("networkidle"); // let the page hydrate first, or a fast click can land before its handlers exist
   await page.locator("#studio-model").selectOption("fz-x");
   await expect(page).toHaveURL(/\/experience\?model=fz-x$/);
   await page.goto("/experience?model=fz-x"); // a shared / bookmarked link
