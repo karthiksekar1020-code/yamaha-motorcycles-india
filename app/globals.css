@@ -105,18 +105,10 @@ html[data-script="indic"] header nav[aria-label="Primary"] { gap: 1.25rem; }
   html[data-script="indic"] header button[aria-haspopup="dialog"] { display: block !important; }
 }
 
-/* Logo: "YAMAHA" with "MOTORCYCLES INDIA" in the same font. Two lines when space is tight, one line on wide screens. */
+/* Logo: "YAMAHA" on top with a small "MOTORCYCLES INDIA" under it, on every screen size. */
 .logo-lockup { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.02; color: var(--text-primary); }
 .logo-lockup .l1 { font-size: 1.5rem; letter-spacing: .14em; }
 .logo-lockup .l2 { font-size: .8rem; letter-spacing: .18em; white-space: nowrap; }
-@media (min-width: 1280px) {
-  html[data-script="latin"] .logo-lockup { flex-direction: row; align-items: baseline; gap: .55rem; }
-  html[data-script="latin"] .logo-lockup .l2 { font-size: 1.5rem; letter-spacing: .14em; }
-}
-@media (min-width: 1536px) {
-  html[data-script="indic"] .logo-lockup { flex-direction: row; align-items: baseline; gap: .55rem; }
-  html[data-script="indic"] .logo-lockup .l2 { font-size: 1.4rem; letter-spacing: 0; }
-}
 html[data-script="indic"] .logo-lockup .l1, html[data-script="indic"] .logo-lockup .l2 { letter-spacing: .02em; }
 
 /* Intro animation (components/layout/IntroLoader.tsx): hide the real logo while the intro word flies to it. */
@@ -188,3 +180,48 @@ html, body { overflow-x: clip; }
 
 /* The admin password fields have their own show/hide button: hide the browser's built-in one so two eyes are not shown. */
 input::-ms-reveal, input::-ms-clear { display: none; }
+
+/* Logo flash: a bright blue-white shine sweeps across the YAMAHA text every few seconds (and on hover), with a glow flash on the mark. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-intro="play"]) .logo-lockup .l1,
+  html:not([data-intro="play"]) .logo-lockup .l2 {
+    background-image: linear-gradient(105deg, var(--text-primary) 42%, #7fc0ff 49%, #fff 51%, var(--text-primary) 58%);
+    background-size: 280% 100%;
+    background-position: 120% 0;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: logo-shine 5s ease-in-out 1.2s infinite;
+  }
+  html:not([data-intro="play"]) .logo-lockup .l2 { animation-delay: 1.45s; }
+  html:not([data-intro="play"]) .brand-mark { animation: logo-glow 5s ease-in-out 1.2s infinite; }
+  a:hover > .logo-lockup .l1, a:hover > .logo-lockup .l2 { animation-duration: 1.4s; animation-delay: 0s; }
+  a:hover > .brand-mark { animation-duration: 1.4s; animation-delay: 0s; }
+}
+@keyframes logo-shine { 0% { background-position: 120% 0; } 28%, 100% { background-position: -40% 0; } }
+@keyframes logo-glow {
+  0%, 30%, 100% { filter: drop-shadow(0 0 0 rgba(80, 160, 255, 0)); }
+  12% { filter: drop-shadow(0 0 10px rgba(110, 180, 255, .95)) brightness(1.25); }
+}
+
+/* Logo extras: wipe-in once the intro ends, a soft glow pulse, a blue underline that sweeps under the words, and a hover lift. */
+.logo-lockup { position: relative; }
+.logo-lockup::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #3b8cff, #9fd0ff, #3b8cff, transparent);
+  transform: scaleX(0); transform-origin: left; opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-intro="done"] .logo-lockup .l1, html[data-intro="done"] .logo-lockup .l2 { animation-name: logo-shine, logo-wipe; animation-duration: 5s, .9s; animation-delay: 1.2s, 0s; animation-iteration-count: infinite, 1; animation-fill-mode: none, backwards; }
+  html[data-intro="done"] .logo-lockup .l2 { animation-delay: 1.45s, .15s; }
+  html:not([data-intro="play"]) .logo-lockup { animation: logo-aura 5s ease-in-out 1.2s infinite; }
+  html:not([data-intro="play"]) .logo-lockup::after { animation: logo-underline 5s ease-in-out 1.3s infinite; }
+  a:hover > .logo-lockup { animation-duration: 1.4s; animation-delay: 0s; }
+  a:hover > .logo-lockup::after { animation-duration: 1.4s; animation-delay: 0s; }
+  .logo-lockup .l1, .logo-lockup .l2 { transition: letter-spacing .5s cubic-bezier(.22, 1, .36, 1), transform .5s cubic-bezier(.22, 1, .36, 1); }
+  a:hover > .logo-lockup .l1 { letter-spacing: .2em; }
+  a:hover > .logo-lockup .l2 { letter-spacing: .24em; }
+  a:hover > .logo-lockup { transform: translateX(2px); }
+}
+@keyframes logo-wipe { from { clip-path: inset(0 100% 0 0); transform: translateX(-10px); } to { clip-path: inset(0 0 0 0); transform: none; } }
+@keyframes logo-aura { 0%, 40%, 100% { filter: drop-shadow(0 0 0 rgba(90, 170, 255, 0)); } 15% { filter: drop-shadow(0 0 8px rgba(90, 170, 255, .75)); } }
+@keyframes logo-underline { 0%, 4% { transform: scaleX(0); opacity: 0; transform-origin: left; } 14% { transform: scaleX(1); opacity: 1; transform-origin: left; } 24% { transform: scaleX(1); opacity: 1; transform-origin: right; } 34%, 100% { transform: scaleX(0); opacity: 0; transform-origin: right; } }
