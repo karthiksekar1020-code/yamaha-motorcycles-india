@@ -25,17 +25,17 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
       ) : (
         <>
           <div className="overflow-x-auto border border-line">
-            <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+            <table className="admin-table w-full min-w-[560px] border-collapse text-left text-sm">
               <caption className="sr-only">Administrator activity, newest first</caption>
               <thead className="bg-surface text-xs uppercase tracking-[.14em] text-muted"><tr><th scope="col" className="p-3">When</th><th scope="col" className="p-3">Action</th><th scope="col" className="p-3">Item</th></tr></thead>
               <tbody>
-                {data.map((r) => {
+                {data.map((r, i) => {
                   const d = (r.details ?? {}) as Record<string, unknown>;
                   const what = typeof d.slug === "string" ? d.slug : typeof d.name === "string" ? d.name : (r.entity_id as string | null) ?? "";
                   return (
-                    <tr key={r.id as number} className="border-t border-line align-top">
+                    <tr key={r.id as number} style={{ "--i": Math.min(i, 14) } as React.CSSProperties} className="admin-row border-t border-line align-top">
                       <td className="num whitespace-nowrap p-3 text-muted"><time dateTime={r.created_at as string}>{new Date(r.created_at as string).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</time></td>
-                      <td className="p-3">{actionLabel(r.action as string)}</td>
+                      <td className="p-3"><span className="audit-action" data-kind={/sign.?in|login/i.test(String(r.action)) ? "in" : /sign.?out|logout/i.test(String(r.action)) ? "out" : /delete|remove/i.test(String(r.action)) ? "del" : "edit"}>{actionLabel(r.action as string)}</span></td>
                       <td className="max-w-[260px] truncate p-3 text-muted" title={String(what)}>{r.entity ? `${r.entity}${what ? `: ${what}` : ""}` : ""}</td>
                     </tr>
                   );

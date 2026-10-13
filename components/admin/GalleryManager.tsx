@@ -130,12 +130,12 @@ export function GalleryManager({ initial, models }: { initial: GalleryItemData[]
         <div
           onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
           onDrop={(e) => { e.preventDefault(); setDrag(false); addFiles(e.dataTransfer.files); }}
-          className={`mt-4 grid place-items-center border-2 border-dashed p-8 text-center transition-colors ${drag ? "border-blue-bright bg-blue/10" : "border-line"}`}
+          className={`dropzone mt-4 grid place-items-center border-2 border-dashed p-8 text-center transition-colors ${drag ? "is-drag border-blue-bright bg-blue/10" : "border-line"}`}
         >
-          <UploadCloud size={32} className="text-blue-bright" aria-hidden />
-          <p className="mt-2 text-sm">Drag photos here, or</p>
+          <UploadCloud size={32} className="dropzone-icon text-blue-bright" aria-hidden />
+          <p className="dropzone-text mt-2 text-sm">{drag ? "Drop to add them" : "Drag photos here, or"}</p>
           <input ref={input} id="gallery-files" type="file" accept={ACCEPT} multiple className="sr-only" onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }} />
-          <label htmlFor="gallery-files" className="btn btn-ghost btn-sm mt-3 cursor-pointer"><ImagePlus size={16} aria-hidden /> Choose photos</label>
+          <label htmlFor="gallery-files" className="btn btn-ghost btn-sm dropzone-btn mt-3 cursor-pointer"><ImagePlus size={16} aria-hidden /> Choose photos</label>
           <p className="mt-3 text-xs text-muted">JPEG, PNG, WebP or AVIF · up to {MAX_MB} MB each · {MAX_FILES} at a time · at least 200 × 200 pixels. Photos are re-saved as WebP and start as drafts.</p>
         </div>
 

@@ -31,10 +31,10 @@ export function MotorcycleRowActions({ id, slug, name, published, values }: { id
 
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-      <Link href={`/admin/motorcycles/${id}`} className="underline hover:text-blue-bright">Edit</Link>
-      <Link href={`/admin/motorcycles/${id}/preview`} target="_blank" className="underline hover:text-blue-bright">Preview</Link>
-      <button onClick={toggle} disabled={busy} className="underline hover:text-blue-bright disabled:opacity-60">{published ? "Unpublish" : "Publish"}</button>
-      <button onClick={() => setConfirmDelete(true)} disabled={busy} className="text-danger underline disabled:opacity-60">Delete</button>
+      <Link href={`/admin/motorcycles/${id}`} className="row-action">Edit</Link>
+      <Link href={`/admin/motorcycles/${id}/preview`} target="_blank" className="row-action">Preview</Link>
+      <button onClick={toggle} disabled={busy} className="row-action disabled:opacity-60">{published ? "Unpublish" : "Publish"}</button>
+      <button onClick={() => setConfirmDelete(true)} disabled={busy} className="row-action row-action-danger disabled:opacity-60">Delete</button>
       {error && <span role="alert" className="w-full text-xs text-danger">{error}</span>}
       <ConfirmDialog open={confirmDelete} title={`Delete ${name}?`} confirmLabel="Delete motorcycle" typeToConfirm={slug} busy={busy} error={error} onConfirm={remove} onCancel={() => { setConfirmDelete(false); setError(""); }}>
         This permanently removes the model{published ? " from the public website" : ""}. Photos linked to it stay in the gallery. This cannot be undone.

@@ -13,6 +13,7 @@ export function AuthShell({ title, intro, children, footer }: { title: string; i
       <aside aria-hidden className="auth-hero relative hidden overflow-hidden border-r border-line lg:block">
         <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_60%_55%,rgba(22,119,255,.32),transparent),linear-gradient(160deg,#07123a,#030818_70%)]" />
         <div className="absolute inset-0 opacity-60 [background:repeating-linear-gradient(115deg,transparent_0_70px,rgba(255,255,255,.035)_70px_71px)]" />
+        <div className="auth-speed" />
         <div className="relative flex h-full flex-col justify-between p-12">
           <div>
             <p className="display text-3xl tracking-[.14em]">YAMAHA</p>
@@ -28,11 +29,13 @@ export function AuthShell({ title, intro, children, footer }: { title: string; i
         </div>
       </aside>
 
-      <main id="main" className="relative flex items-center justify-center bg-[radial-gradient(80%_50%_at_50%_0%,rgba(22,119,255,.14),transparent)] px-5 py-12 sm:px-10">
-        <div className="auth-card w-full max-w-md">
+      <main id="main" className="auth-main relative flex items-center justify-center overflow-hidden bg-[radial-gradient(80%_50%_at_50%_0%,rgba(22,119,255,.14),transparent)] px-5 py-12 sm:px-10">
+        <div aria-hidden className="auth-aurora" />
+        <div aria-hidden className="auth-particles" />
+        <div className="auth-card relative w-full max-w-md">
           <Link href="/" className="micro mb-8 inline-flex items-center gap-2 hover:text-fg">← Back to the website</Link>
           <p className="micro !text-blue-bright">Staff only</p>
-          <h1 className="display mt-2 text-4xl md:text-5xl">{title}</h1>
+          <h1 className="auth-title display mt-2 text-4xl md:text-5xl">{title}</h1>
           {intro && <p className="mt-3 text-sm text-muted">{intro}</p>}
           <div className="mt-8">{children}</div>
           {footer && <div className="mt-6 text-sm text-muted">{footer}</div>}

@@ -82,13 +82,13 @@ export function ContentEditor({ blocks }: { blocks: Record<ContentKey, BlockStat
       <div role="tablist" aria-label="Content blocks" className="mb-6 flex flex-wrap gap-2 border-b border-line">
         {TABS.map((t) => (
           <button key={t.key} role="tab" id={`tab-${t.key}`} aria-selected={tab === t.key} aria-controls={`panel-${t.key}`} onClick={() => { setTab(t.key); setMsg(null); setErrors({}); }}
-            className={`-mb-px border-b-2 px-4 py-3 text-sm ${tab === t.key ? "border-blue-bright text-fg" : "border-transparent text-muted hover:text-fg"}`}>
+            className={`admin-tab -mb-px border-b-2 px-4 py-3 text-sm ${tab === t.key ? "border-blue-bright text-fg" : "border-transparent text-muted hover:text-fg"}`}>
             {t.label} {serverState[t.key].published !== null && <span aria-label="published" className="ml-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-300" />}
           </button>
         ))}
       </div>
 
-      <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="max-w-4xl">
+      <div key={tab} role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="max-w-4xl">
         <div className="mb-5 flex flex-wrap items-center gap-3">
           <StatusPill on={live} onLabel="Live: edited wording" offLabel="Live: built-in wording" />
           {block.draft !== null && <StatusPill on={false} offLabel="Saved draft" />}

@@ -55,14 +55,14 @@ export default async function MotorcyclesPage({ searchParams }: { searchParams: 
       ) : (
         <>
           <div className="hidden overflow-x-auto border border-line md:block">
-            <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+            <table className="admin-table w-full min-w-[720px] border-collapse text-left text-sm">
               <caption className="sr-only">Motorcycle models</caption>
               <thead className="bg-surface text-xs uppercase tracking-[.14em] text-muted">
                 <tr><th scope="col" className="p-3">Model</th><th scope="col" className="p-3">Category</th><th scope="col" className="p-3">Market</th><th scope="col" className="p-3">Status</th><th scope="col" className="p-3">Actions</th></tr>
               </thead>
               <tbody>
-                {items.map((m) => (
-                  <tr key={m.id} className="border-t border-line align-top">
+                {items.map((m, i) => (
+                  <tr key={m.id} style={{ "--i": Math.min(i, 14) } as React.CSSProperties} className="admin-row border-t border-line align-top">
                     <td className="p-3"><p className="font-semibold">{m.name}{m.isFeatured && <span className="ml-2 text-xs text-blue-bright" title="Featured on the homepage">★ Featured</span>}</p><p className="text-xs text-muted">/{m.slug}</p></td>
                     <td className="p-3">{m.category}</td>
                     <td className="p-3">{m.market}</td>

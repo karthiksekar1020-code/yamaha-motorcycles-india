@@ -25,7 +25,7 @@ export function LoginForm({ next }: { next?: string }) {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5" aria-describedby={error ? "login-error" : undefined}>
+    <form onSubmit={onSubmit} noValidate className="auth-form space-y-5" aria-describedby={error ? "login-error" : undefined}>
       <div>
         <label htmlFor="email" className="micro mb-2 block">Email</label>
         <input id="email" type="email" inputMode="email" autoComplete="username" autoFocus className="field" aria-invalid={errors.email ? true : undefined} aria-describedby={errors.email ? "email-err" : undefined} {...register("email")} />
@@ -38,14 +38,14 @@ export function LoginForm({ next }: { next?: string }) {
         </div>
         <div className="relative">
           <input id="password" type={show ? "text" : "password"} autoComplete="current-password" className="field pr-12" aria-invalid={errors.password ? true : undefined} aria-describedby={errors.password ? "password-err" : undefined} {...register("password")} />
-          <button type="button" onClick={() => setShow((s) => !s)} aria-label={show ? "Hide password" : "Show password"} aria-pressed={show} className="absolute right-0 top-0 grid h-12 w-12 place-items-center text-muted hover:text-fg">
+          <button type="button" onClick={() => setShow((s) => !s)} aria-label={show ? "Hide password" : "Show password"} aria-pressed={show} className="auth-eye absolute right-0 top-0 grid h-12 w-12 place-items-center text-muted hover:text-fg">
             {show ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
         {errors.password && <p id="password-err" role="alert" className="mt-1 text-xs text-danger">{errors.password.message}</p>}
       </div>
-      {error && <p id="login-error" role="alert" className="border border-danger/60 bg-danger/10 p-3 text-sm">{error}</p>}
-      <button className="btn w-full" disabled={isSubmitting}>
+      {error && <p id="login-error" role="alert" className="auth-shake border border-danger/60 bg-danger/10 p-3 text-sm">{error}</p>}
+      <button className="btn auth-submit w-full" disabled={isSubmitting}>
         {isSubmitting ? <><Loader2 size={18} className="animate-spin" aria-hidden /> Signing in…</> : "Sign in"}
       </button>
     </form>

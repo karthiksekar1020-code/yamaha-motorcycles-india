@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { m as motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 import { ModelPicture } from "@/components/ui/ModelPicture";
 import { AnimatedLine } from "./AnimatedHeadline";
 import { usePrefersReducedMotion } from "@/lib/utils/hooks";
@@ -25,6 +26,9 @@ export function HeroSection({ motorcycle }: { motorcycle: Motorcycle }) {
 
   return (
     <section className="relative flex min-h-[100svh] items-end overflow-hidden pb-14 pt-24 md:items-center md:pb-0" aria-labelledby="hero-title">
+      {/* Racing footage behind everything. The dark overlay keeps the headline and the bike readable. Scaled up from the top-left so the corner of the clip that carries the generator watermark falls outside the section. */}
+      <LazyVideo src="/videos/hero-racing.mp4" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", maxWidth: "none", objectFit: "cover", transform: "scale(1.14)", transformOrigin: "0 0" }} />
+      <div aria-hidden className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,12,36,.88)_0%,rgba(5,12,36,.6)_55%,rgba(5,12,36,.4)_100%)]" />
       <motion.div aria-hidden style={{ y: bgY, x: bgX }} className="absolute -inset-x-16 inset-y-0 bg-[radial-gradient(60%_70%_at_75%_55%,rgba(22,119,255,.22),transparent),repeating-linear-gradient(115deg,transparent_0_70px,rgba(255,255,255,.035)_70px_71px)]" />
       <motion.div style={{ opacity: fade }} className="pointer-events-none absolute inset-x-0 top-[72px] h-[48svh] md:pointer-events-auto md:inset-y-0 md:left-[47%] md:right-0 md:top-0 md:h-auto">
         <div className="flex h-full w-full items-center justify-center md:pl-6">

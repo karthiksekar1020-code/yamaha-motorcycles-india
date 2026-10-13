@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Bike, FileText, Images } from "lucide-react";
+import { CountUp } from "@/components/admin/CountUp";
 import { Card, PageHeader, StatusPill } from "@/components/admin/ui";
 import { requireAdminPage } from "@/lib/admin/auth";
 import { actionLabel } from "@/lib/admin/labels";
@@ -35,24 +36,24 @@ export default async function DashboardPage() {
       </PageHeader>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {stats.map(({ label, value, sub, href, icon: Icon }) => (
-          <Link key={label} href={href} className="group border border-line bg-surface p-5 transition-colors hover:border-blue-bright">
-            <div className="flex items-center justify-between"><p className="micro">{label}</p><Icon size={18} className="text-blue-bright" aria-hidden /></div>
-            <p className="display num mt-3 text-5xl">{value}</p>
+        {stats.map(({ label, value, sub, href, icon: Icon }, i) => (
+          <Link key={label} href={href} style={{ "--i": i } as React.CSSProperties} className="stat-card group border border-line bg-surface p-5 hover:border-blue-bright">
+            <div className="flex items-center justify-between"><p className="micro">{label}</p><Icon size={18} className="stat-icon text-blue-bright" aria-hidden /></div>
+            <p className="display num mt-3 text-5xl"><CountUp value={value} /></p>
             <p className="mt-1 text-xs text-muted">{sub}</p>
           </Link>
         ))}
       </div>
 
       <Card className="mt-6">
-        <div className="flex items-center justify-between"><h2 className="display text-2xl">Recent activity</h2><Link href="/admin/audit" className="link-underline micro !text-fg">View all</Link></div>
+        <div className="flex items-center justify-between"><h2 className="display text-2xl">Recent activity</h2><Link href="/admin/audit" className="link-underline micro activity-viewall !text-fg">View all <span aria-hidden className="activity-arrow">→</span></Link></div>
         {recent.error ? (
           <p role="alert" className="mt-4 text-sm text-danger">Couldn’t load recent activity.</p>
         ) : recent.data && recent.data.length > 0 ? (
-          <ul className="mt-4 divide-y divide-line text-sm">
-            {recent.data.map((r) => (
-              <li key={r.id as number} className="flex flex-wrap items-center justify-between gap-2 py-3">
-                <span>{actionLabel(r.action as string)}</span>
+          <ul className="activity-list mt-4 divide-y divide-line text-sm">
+            {recent.data.map((r, i) => (
+              <li key={r.id as number} style={{ "--i": i } as React.CSSProperties} className={"activity-row flex flex-wrap items-center justify-between gap-2 py-3" + (i === 0 ? " is-latest" : "")}>
+                <span className="flex items-center gap-3"><span aria-hidden className="activity-dot" />{actionLabel(r.action as string)}</span>
                 <time dateTime={r.created_at as string} className="text-xs text-muted">{new Date(r.created_at as string).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</time>
               </li>
             ))}

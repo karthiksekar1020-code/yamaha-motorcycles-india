@@ -56,7 +56,7 @@ export function GalleryGrid({ items: base, viewerTile = false, canRemove = false
     return () => { off = true; map.forEach((u) => URL.revokeObjectURL(u)); map.clear(); };
   }, [viewerTile]);
 
-  const items: Item[] = (viewerTile ? [...base, ...mine] : base).filter((x) => !removed.has(x.id));
+  const items: Item[] = (viewerTile && canRemove ? [...base, ...mine] : base).filter((x) => !removed.has(x.id));
   const step = useCallback((d: number) => setOpen((i) => (i === null ? i : (i + d + items.length) % items.length)), [items.length]);
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export function GalleryGrid({ items: base, viewerTile = false, canRemove = false
     setStatus(`Removed “${it.title}” from the gallery.`);
     router.refresh(); // re-read the gallery from the server so the page matches the database
   };
-  const mayRemove = (it: Item) => Boolean(it.mine) || canRemove;
+  const mayRemove = () => canRemove; // delete buttons are for the signed-in owner only
 
   const g = open === null ? null : items[open]!;
   const gap = (3 - (items.length % 3)) % 3;
@@ -138,7 +138,7 @@ export function GalleryGrid({ items: base, viewerTile = false, canRemove = false
             transition={{ duration: 0.75, delay: (i % 3) * 0.12, ease: [0.22, 1, 0.36, 1] }}
             className="relative"
           >
-            {mayRemove(it) && (
+            {mayRemove() && (
               <button
                 onClick={() => { setRemoveError(""); setToRemove(it); }}
                 aria-label={`Remove photo: ${it.title}`}
@@ -174,10 +174,14 @@ export function GalleryGrid({ items: base, viewerTile = false, canRemove = false
               <div className="pointer-events-none relative z-10">
                 <span className={`display block ${narrow ? "text-3xl md:text-2xl" : "text-3xl md:text-4xl"}`}>View all {items.length} photos</span>
                 <span className="micro mt-2 block !text-fg">{narrow ? "Open the viewer →" : "Open the full-screen image viewer →"}</span>
-                <input ref={fileInput} id="add-photo" type="file" multiple accept={ACCEPT.join(",")} className="sr-only" onChange={(e) => addFiles(e.target.files)} disabled={busy} />
-                <label htmlFor="add-photo" className={`btn btn-ghost btn-sm pointer-events-auto mt-4 cursor-pointer whitespace-nowrap ${busy ? "opacity-60" : ""}`}>
-                  <ImagePlus size={16} /> {busy ? "Adding…" : "Add photo"}
-                </label>
+                {canRemove && (
+                  <>
+                  <input ref={fileInput} id="add-photo" type="file" multiple accept={ACCEPT.join(",")} className="sr-only" onChange={(e) => addFiles(e.target.files)} disabled={busy} />
+                  <label htmlFor="add-photo" className={`btn btn-ghost btn-sm pointer-events-auto mt-4 cursor-pointer whitespace-nowrap ${busy ? "opacity-60" : ""}`}>
+                    <ImagePlus size={16} /> {busy ? "Adding…" : "Add photo"}
+                  </label>
+                  </>
+                )}
               </div>
               <span aria-hidden className={`pointer-events-none relative hidden h-28 w-44 shrink-0 sm:block ${narrow ? "md:hidden" : ""}`}>
                 {items.slice(0, 3).map((it, k) => (
@@ -190,7 +194,7 @@ export function GalleryGrid({ items: base, viewerTile = false, canRemove = false
           </motion.li>
         )}
       </ul>
-      {viewerTile && (
+      {viewerTile && canRemove && (
         <p className="mt-3 min-h-5 text-xs text-muted" role="status" aria-live="polite">
           {status || `Add photos from your device (JPG, PNG, WebP, GIF or AVIF, up to ${MAX_FILE_MB} MB each, ${MAX_PHOTOS} max). They are saved in this browser only and are not uploaded.`}
         </p>
@@ -208,7 +212,7 @@ export function GalleryGrid({ items: base, viewerTile = false, canRemove = false
             <div className="mx-auto max-w-3xl text-center">
               <h3 className="display text-2xl">{g.title}</h3>
               <p className="mt-1 text-sm text-muted">{g.caption}</p>
-              {mayRemove(g as Item) && (
+              {mayRemove() && (
                 <button onClick={() => { setRemoveError(""); setToRemove(g as Item); }} className="btn btn-ghost btn-sm mt-3"><Trash2 size={16} /> Remove this photo</button>
               )}
             </div>

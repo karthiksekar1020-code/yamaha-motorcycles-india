@@ -13,6 +13,7 @@ export function PasswordCard() {
   const [err, setErr] = useState("");
   const [ok, setOk] = useState("");
   const [busy, setBusy] = useState(false);
+  const strength = [pw.length >= 12, /[a-z]/.test(pw), /[A-Z]/.test(pw), /[0-9]/.test(pw)].filter(Boolean).length + (pw.length >= 16 ? 1 : 0);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setErr(""); setOk("");
     if (pw !== again) { setErr("The two passwords do not match."); return; }
@@ -25,10 +26,12 @@ export function PasswordCard() {
     setPw(""); setAgain(""); setOk("Password changed. Other devices have been signed out.");
   };
   return (
-    <Card>
+    <Card className="sec-card">
       <h2 className="display text-2xl">Change password</h2>
       <form onSubmit={submit} noValidate className="mt-4 max-w-md space-y-4">
-        <div><label htmlFor="new-pw" className="micro mb-2 block">New password</label><input id="new-pw" type="password" autoComplete="new-password" className="field" value={pw} onChange={(e) => setPw(e.target.value)} aria-describedby="pw-rules" /><p id="pw-rules" className="mt-1 text-xs text-muted">At least 12 characters with upper-case, lower-case and a number.</p></div>
+        <div><label htmlFor="new-pw" className="micro mb-2 block">New password</label><input id="new-pw" type="password" autoComplete="new-password" className="field" value={pw} onChange={(e) => setPw(e.target.value)} aria-describedby="pw-rules" />
+          <div className="strength mt-2" data-level={pw ? strength : 0} aria-hidden>{[0, 1, 2, 3, 4].map((k) => <span key={k} className={k < strength ? "on" : ""} />)}</div>
+          <p id="pw-rules" className="mt-1 text-xs text-muted">At least 12 characters with upper-case, lower-case and a number.</p></div>
         <div><label htmlFor="new-pw2" className="micro mb-2 block">Repeat new password</label><input id="new-pw2" type="password" autoComplete="new-password" className="field" value={again} onChange={(e) => setAgain(e.target.value)} /></div>
         {err && <div role="alert"><FieldError msg={err} /></div>}
         {ok && <p role="status" className="border border-emerald-400/50 bg-emerald-400/10 p-3 text-sm">{ok}</p>}
@@ -71,7 +74,7 @@ export function MfaCard({ factorId }: { factorId: string | null }) {
   };
 
   return (
-    <Card>
+    <Card className="sec-card">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="display flex items-center gap-2 text-2xl"><ShieldCheck size={22} aria-hidden /> Two-step sign-in</h2>
         <StatusPill on={Boolean(factorId)} onLabel="On" offLabel="Off" />
