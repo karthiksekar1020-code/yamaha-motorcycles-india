@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AnimatePresence, animate, m as motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ModelPicture } from "@/components/ui/ModelPicture";
+import { Parallax } from "@/components/ui/Parallax";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 import { fmtMeasure, fmtNum } from "@/lib/utils/format";
 import { usePrefersReducedMotion } from "@/lib/utils/hooks";
@@ -48,7 +49,10 @@ export function FeaturedStage({ models }: { models: Motorcycle[] }) {
 
   return (
     <section id="featured" className="relative overflow-hidden border-y border-line bg-surface py-16 md:py-24" aria-roledescription="carousel" aria-label="Featured motorcycles">
-      <div className="container-x">
+      <Parallax speed={120} className="pointer-events-none absolute -inset-y-24 inset-x-0">
+        <div aria-hidden className="h-full w-full bg-[radial-gradient(50%_60%_at_70%_50%,rgba(22,119,255,.16),transparent),repeating-linear-gradient(115deg,transparent_0_70px,rgba(255,255,255,.03)_70px_71px)]" />
+      </Parallax>
+      <div className="container-x relative">
         <div className="flex items-end justify-between">
           <p className="micro">{t("home.featured")}</p>
           <div className="flex gap-2">
@@ -70,9 +74,9 @@ export function FeaturedStage({ models }: { models: Motorcycle[] }) {
                   <CompareToggle slug={m.slug} name={m.name} className="h-12" />
                 </div>
               </div>
-              <div className="relative">
+              <Parallax speed={-70} className="relative">
                 <ModelPicture m={m} className="mx-auto h-auto w-full max-w-3xl drop-shadow-[0_30px_50px_rgba(22,119,255,.25)]" sizes="(min-width:768px) 55vw, 100vw" />
-              </div>
+              </Parallax>
             </motion.div>
           </AnimatePresence>
         </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BikeArt, variantFor } from "@/components/ui/BikeArt";
 import { ModelPicture } from "@/components/ui/ModelPicture";
 import { TiltCard } from "@/components/ui/TiltCard";
+import { Parallax } from "@/components/ui/Parallax";
 import { CATEGORY_ACCENT } from "@/lib/utils/accent";
 import { CATEGORIES, type Category, type Motorcycle } from "@/types/motorcycle";
 
@@ -19,8 +20,10 @@ const BLURB: Record<Category, string> = {
 export function CategoryShowcase({ all }: { all: Motorcycle[] }) {
   return (
     <section className="container-x py-20 md:py-28">
-      <p className="micro"><T k="home.chooseRide" /></p>
-      <h2 className="display mt-2 text-3xl md:text-5xl"><T k="home.categories" /></h2>
+      <Parallax speed={-30}>
+        <p className="micro"><T k="home.chooseRide" /></p>
+        <h2 className="display mt-2 text-3xl md:text-5xl"><T k="home.categories" /></h2>
+      </Parallax>
       <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {CATEGORIES.filter((c) => all.some((m) => m.category === c)).map((c, i) => {
           const inCat = all.filter((m) => m.category === c);
