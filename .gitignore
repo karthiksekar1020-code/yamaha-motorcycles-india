@@ -1,9 +1,13 @@
 node_modules
 .next
-.env
-.env.local
 playwright-report
 test-results
 *.tsbuildinfo
 next-env.d.ts
-.env.local
+
+# Secrets: never commit these. .env.example is the only env file that belongs in git.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
