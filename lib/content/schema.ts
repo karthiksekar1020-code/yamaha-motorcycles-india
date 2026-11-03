@@ -76,3 +76,5 @@ export function contentToEnglishOverrides(c: Partial<Record<ContentKey, ContentV
   if (home) for (const [field, key] of Object.entries(HOME_KEYS)) out[key] = home[field as keyof HomeContent];
   return out;
 }
+
+export type PublishedContent = Partial<Record<ContentKey, ContentValue>>;

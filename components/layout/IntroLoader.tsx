@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import { m as motion } from "framer-motion";
 
 /**
@@ -23,7 +22,6 @@ const BASE_PX = 100;
 type Frames = { x: number[]; y: number[]; scale: number[]; mark: { x: number[]; y: number[]; scale: number[] } | null };
 
 export function IntroLoader({ brand = "YAMAHA", oncePerSession = true, logoSrc = null }: { brand?: string; oncePerSession?: boolean; logoSrc?: string | null }) {
-  const isAdmin = usePathname().startsWith("/admin"); // no intro animation inside the admin area
   const wordRef = useRef<HTMLDivElement>(null);
   const [frames, setFrames] = useState<Frames | null>(null);
   const [gone, setGone] = useState(false);
@@ -92,7 +90,7 @@ export function IntroLoader({ brand = "YAMAHA", oncePerSession = true, logoSrc =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (gone || isAdmin) return null;
+  if (gone) return null;
 
   return (
     <>

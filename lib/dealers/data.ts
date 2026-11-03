@@ -1,7 +1,7 @@
 import type { Dealer } from "../../types/dealer";
 
 /**
- * LOCAL DEALER LIST: used when Supabase is not configured.
+ * LOCAL DEALER LIST: the only dealer source.
  *
  * Entries with `isVerified: false` are UNVERIFIED LISTINGS copied from third-party sites. The dealer page shows
  * them with an "Unverified listing" label, and they are never offered in the test-ride form. To promote one, check it

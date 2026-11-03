@@ -15,7 +15,7 @@ import { CompareTray } from "@/components/compare/CompareTray";
 import { getBrandLogo } from "@/lib/brand";
 import { IntroLoader } from "@/components/layout/IntroLoader";
 import { MotionProvider } from "@/components/ui/MotionProvider";
-import { getPublishedContent } from "@/lib/content/server";
+import type { PublishedContent } from "@/lib/content/schema";
 import { contentToEnglishOverrides, DEFAULT_NAVIGATION, NAV_LABEL_KEY, type NavigationContent } from "@/lib/content/schema";
 import type { NavItem } from "@/components/layout/Header";
 
@@ -54,8 +54,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const saved = (await cookies()).get("ymi.lang")?.value;
   const lang = isLang(saved) ? saved : "en";
   const tag = LANGS.find((l) => l.code === lang)!.tag;
-  // Wording the owner published from the admin replaces the English text; other languages keep their own translations.
-  const content = await getPublishedContent();
+  // Optional English wording overrides (currently none); other languages keep their own translations.
+  const content: PublishedContent = {};
   const dict = lang === "en" ? { ...MESSAGES.en, ...contentToEnglishOverrides(content) } : MESSAGES[lang];
   const navConfig = (content.navigation as NavigationContent | undefined) ?? DEFAULT_NAVIGATION;
   const nav: NavItem[] = navConfig.items.filter((i) => i.visible).map((i) => ({ href: i.href, key: NAV_LABEL_KEY[i.href], label: i.label }));

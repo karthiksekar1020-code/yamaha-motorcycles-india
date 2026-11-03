@@ -43,7 +43,6 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
   useEffect(() => setMenu(false), [path]);
 
   const active = (href: string) => path === href || path.startsWith(href + "/");
-  if (path.startsWith("/admin")) return null; // the admin area has its own layout
 
   return (
     <>
@@ -69,7 +68,6 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
           <div className="flex items-center gap-1 sm:gap-2">
             <button onClick={() => { setSearched(true); setSearch(true); }} onPointerEnter={preloadSearch} onFocus={preloadSearch} aria-label={t("nav.search")} className="p-2.5 hover:text-blue-bright"><Search size={20} /></button>
             <LanguageSwitcher />
-            <Link href="/admin/login" rel="nofollow" className="micro px-2.5 py-2 !text-fg hover:!text-blue-bright max-sm:hidden!">Login</Link>
             <Link href="/test-ride" className="btn btn-sm ml-1 whitespace-nowrap max-sm:hidden!">{t("nav.testRide")}</Link>
             <button onClick={() => setMenu(true)} aria-label={t("nav.openMenu")} aria-haspopup="dialog" className="p-2.5 lg:hidden"><Menu size={22} /></button>
           </div>
@@ -84,7 +82,6 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
               <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined} className="display border-b border-line py-4 text-3xl aria-[current=page]:text-blue-bright">{label(n)}</Link>
             ))}
           </nav>
-          <Link href="/admin/login" rel="nofollow" className="display border-b border-line py-4 text-3xl">Login</Link>
           <Link href="/test-ride" className="btn mt-auto">{t("nav.requestTestRide")}</Link>
         </div>
       </ModalDialog>

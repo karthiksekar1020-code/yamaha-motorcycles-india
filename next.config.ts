@@ -9,7 +9,7 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
 ];
 
-// Content-Security-Policy. The browser only ever talks to this site (all Supabase calls are made by the server), so
+// Content-Security-Policy. The browser only ever talks to this site, so
 // connect-src is 'self'; nothing can be framed, no plugins, no <base> hijacking, forms only post back here.
 // script-src keeps 'unsafe-inline' because Next.js bootstrap scripts and two tiny inline scripts of ours (intro and
 // reload handling) need it; moving to per-request nonces is the next hardening step. Production only: the dev server

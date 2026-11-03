@@ -46,7 +46,7 @@ export function DealerSearch() {
         {state.kind === "error" && state.setup && (
           <div className="max-w-2xl border border-line bg-elevated p-6">
             <p className="micro !text-fg">Dealer data not connected</p>
-            <p className="mt-2 text-sm text-muted">No dealership dataset is configured, so no dealers are shown. This site never displays unverified locations as authorised dealers. Connect a verified source by setting the Supabase environment variables and loading the <code>dealers</code> table (see README).</p>
+            <p className="mt-2 text-sm text-muted">No dealership dataset is configured, so no dealers are shown. This site never displays unverified locations as authorised dealers. Add verified entries to <code>lib/dealers/data.ts</code>.</p>
           </div>
         )}
         {state.kind === "error" && !state.setup && <p role="alert" className="text-danger">{state.message}</p>}
