@@ -40,11 +40,13 @@ export function IntroLoader({ brand = "YAMAHA", oncePerSession = true, logoSrc =
     (async () => {
       try { await document.fonts.ready; } catch {}
       const word = wordRef.current;
-      const target = document.querySelector<HTMLElement>(".logo-lockup .l1");
-      if (cancelled || !word || !target) return;
+      const target = document.querySelector<HTMLElement>(".logo-lockup"); // the whole name: YAMAHA + VIGNESH BIKEZ
+      const first = target?.querySelector<HTMLElement>(".l1");
+      const second = target?.querySelector<HTMLElement>(".l2");
+      if (cancelled || !word || !target || !first) return;
 
       // Copy the logo's typography so both render the same glyph shapes.
-      const cs = getComputedStyle(target);
+      const cs = getComputedStyle(first);
       const fs = parseFloat(cs.fontSize) || 24;
       const ls = parseFloat(cs.letterSpacing);
       word.style.fontFamily = cs.fontFamily;
@@ -52,7 +54,17 @@ export function IntroLoader({ brand = "YAMAHA", oncePerSession = true, logoSrc =
       word.style.textTransform = cs.textTransform;
       word.style.letterSpacing = `${(Number.isNaN(ls) ? 0 : ls / fs) * BASE_PX}px`;
       word.style.lineHeight = String((parseFloat(cs.lineHeight) || fs * 1.02) / fs);
-      word.textContent = target.textContent || brand;
+      // Same structure as the header lockup (a row with a gap), so the word lands on it exactly.
+      const gapPx = parseFloat(getComputedStyle(target).columnGap) || 0;
+      word.style.display = "flex";
+      word.style.columnGap = `${(gapPx / fs) * BASE_PX}px`;
+      word.textContent = "";
+      for (const el of [first, second]) {
+        if (!el) continue;
+        const span = document.createElement("span");
+        span.textContent = el.textContent;
+        word.appendChild(span);
+      }
 
       const ww = word.offsetWidth, wh = word.offsetHeight;
       const vw = window.innerWidth, vh = window.innerHeight;

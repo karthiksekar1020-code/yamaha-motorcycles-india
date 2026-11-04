@@ -115,7 +115,7 @@ export function TestRideForm({ models, defaultModel }: { models: { slug: string;
       <div className="md:col-span-2">
         <label className="flex items-start gap-3 text-sm">
           <input type="checkbox" className="mt-1 h-4 w-4 accent-[var(--accent-blue)]" aria-invalid={errors.consent ? true : undefined} aria-describedby={errors.consent ? "consent-err" : undefined} {...register("consent")} />
-          <span>I agree to the <Link href="/privacy" className="underline">privacy notice</Link> and consent to being contacted about this request. <span aria-hidden className="text-blue-bright">*</span></span>
+          <span>I consent to being contacted about this request. <span aria-hidden className="text-blue-bright">*</span></span>
         </label>
         {errors.consent && <p id="consent-err" role="alert" className="mt-1 text-xs text-danger">{errors.consent.message}</p>}
       </div>

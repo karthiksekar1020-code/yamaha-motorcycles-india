@@ -3,7 +3,7 @@ import type { Dict } from "../langs";
 const dict: Dict = {
   "nav.home": "Home", "nav.motorcycles": "Motorcycles", "nav.studio": "Studio", "nav.compare": "Compare", "nav.gallery": "Gallery", "nav.dealers": "Dealers",
   "nav.testRide": "Test ride", "nav.requestTestRide": "Request a test ride", "nav.search": "Search", "nav.openMenu": "Open menu", "nav.closeMenu": "Close menu", "nav.language": "Language",
-  "brand.tag": "Motorcycles India",
+  "brand.tag": "Vignesh Bikez",
 
   "hero.eyebrow": "Engineered to move you", "hero.line1": "Feel the", "hero.line2": "Next dimension.",
   "hero.lead": "Discover performance, precision engineering and the machines that turn every ride into an experience.",
@@ -15,8 +15,8 @@ const dict: Dict = {
   "home.gallery": "Gallery", "home.inFocus": "In focus", "home.viewAll": "View all", "home.nextMove": "The next move is yours.",
 
   "footer.explore": "Explore", "footer.company": "Company", "footer.about": "About", "footer.contact": "Contact", "footer.privacy": "Privacy", "footer.terms": "Terms",
-  "footer.blurb": "An independent concept website celebrating motorcycle design and engineering. This site is not affiliated with, endorsed by or operated by Yamaha Motor Co., Ltd. Yamaha and related names are trademarks of their respective owners. Product images © Yamaha Motor India Pvt. Ltd. Specifications shown are demonstration data until verified.",
-  "footer.copy": "Yamaha Motorcycles India (unofficial concept website).",
+  "footer.blurb": "Yamaha showroom in Puducherry: the latest motorcycles and scooters, genuine accessories and reliable customer service. Yamaha and related names are trademarks of their respective owners. Product images © Yamaha Motor India Pvt. Ltd. Specifications and prices are for guidance; please confirm with the showroom.",
+  "footer.copy": "Vignesh Bikez - Yamaha, Pondicherry.",
 
   "page.motorcycles.eyebrow": "The lineup",
   "page.motorcycles.intro": "Search, filter and select up to three motorcycles to compare. Specifications are demonstration data until verified against official sources.",

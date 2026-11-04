@@ -109,7 +109,7 @@ test("test-ride form validates and never fakes success without a database", asyn
   await page.getByRole("button", { name: /request test ride/i }).click();
   await expect(page.getByText("Enter your full name")).toBeVisible();
   await expect(page.getByText(/valid 10-digit Indian mobile/)).toBeVisible();
-  await expect(page.getByText(/accept the privacy notice/)).toBeVisible();
+  await expect(page.getByText(/give your consent/)).toBeVisible();
 
   await page.getByLabel(/full name/i).fill("Asha Rao");
   await page.getByLabel(/mobile number/i).fill("9876543210");

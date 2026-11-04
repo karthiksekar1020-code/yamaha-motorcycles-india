@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, MapPin, Phone, Search, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import { useCompare } from "@/components/compare/CompareProvider";
 import { useI18n } from "@/components/i18n/I18nProvider";
+import { SHOP, SHOP_ADDRESS_ONE_LINE, SHOP_MAP_URL } from "@/lib/config";
 
 // Search is only needed once the visitor opens it, so its code (and the dialog markup) loads on first use.
 const loadSearch = () => import("./SearchOverlay");
@@ -49,13 +50,15 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:text-black">Skip to content</a>
       <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${solid ? "border-b border-line bg-bg/95 backdrop-blur" : "bg-gradient-to-b from-[#050c24]/85 to-transparent"}`}>
         <div className="container-x flex h-[72px] items-center justify-between">
-          <Link href="/" className="display flex shrink-0 items-center gap-3" aria-label="Yamaha Motorcycles India, home">
+          <Link href="/" className="display flex shrink-0 items-center gap-3" aria-label="Yamaha Vignesh Bikez, home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             {logoSrc && <img src={logoSrc} alt="" width={48} height={48} className="brand-mark h-11 w-auto shrink-0 md:h-12" />}
-            <span className="logo-lockup">
+            <span className="logo-lockup whitespace-nowrap">
               <span className="l1">YAMAHA</span>
               <span className="l2">{t("brand.tag")}</span>
             </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/vignesh-logo-white.png" alt="" width={65} height={85} className="h-11 w-auto shrink-0 md:h-14" />
           </Link>
           <nav aria-label="Primary" className="hidden items-center gap-5 lg:flex xl:gap-8">
             {nav.map((n) => (
@@ -67,6 +70,7 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
           </nav>
           <div className="flex items-center gap-1 sm:gap-2">
             <button onClick={() => { setSearched(true); setSearch(true); }} onPointerEnter={preloadSearch} onFocus={preloadSearch} aria-label={t("nav.search")} className="p-2.5 hover:text-blue-bright"><Search size={20} /></button>
+            <a href={`tel:${SHOP.phones[0].tel}`} aria-label={`Call ${SHOP.shortName}: ${SHOP.phones[0].display}`} title={`Call ${SHOP.phones[0].display}`} className="p-2.5 hover:text-blue-bright"><Phone size={20} /></a>
             <LanguageSwitcher />
             <Link href="/test-ride" className="btn btn-sm ml-1 whitespace-nowrap max-sm:hidden!">{t("nav.testRide")}</Link>
             <button onClick={() => setMenu(true)} aria-label={t("nav.openMenu")} aria-haspopup="dialog" className="p-2.5 lg:hidden"><Menu size={22} /></button>
@@ -82,6 +86,10 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
               <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined} className="display border-b border-line py-4 text-3xl aria-[current=page]:text-blue-bright">{label(n)}</Link>
             ))}
           </nav>
+          <div className="mt-6 space-y-3 text-sm">
+            {SHOP.phones.map((p) => <a key={p.tel} href={`tel:${p.tel}`} className="flex items-center gap-2 text-fg"><Phone size={16} aria-hidden />{p.display}</a>)}
+            <a href={SHOP_MAP_URL} target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-muted"><MapPin size={16} className="mt-0.5 shrink-0" aria-hidden />{SHOP_ADDRESS_ONE_LINE}</a>
+          </div>
           <Link href="/test-ride" className="btn mt-auto">{t("nav.requestTestRide")}</Link>
         </div>
       </ModalDialog>

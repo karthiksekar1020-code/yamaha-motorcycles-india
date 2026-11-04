@@ -1,4 +1,4 @@
-# Yamaha Motorcycles India (unofficial concept website)
+# Yamaha Vignesh Bikez (unofficial concept website)
 
 A Next.js app with a searchable catalogue, official product photos (two per model where available), a comparison engine, dealer search and a server-backed test-ride enquiry flow. Target market: India. **Not affiliated with Yamaha Motor Co., Ltd.**
 

@@ -23,7 +23,7 @@ export const testRideSchema = z.object({
   }, "Choose a date within the next 120 days"),
   preferredTimeWindow: z.enum(TIME_WINDOWS, { message: "Choose a time window" }),
   dealerId: z.string().uuid().optional().or(z.literal("")),
-  consent: z.boolean().refine((v) => v === true, "Please accept the privacy notice to continue"),
+  consent: z.boolean().refine((v) => v === true, "Please give your consent to continue"),
   /** Honeypot: real users never see or fill this field. */
   website: z.string().max(0).optional(),
 });

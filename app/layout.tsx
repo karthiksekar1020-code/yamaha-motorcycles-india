@@ -12,6 +12,7 @@ import { CompareProvider } from "@/components/compare/CompareProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CompareTray } from "@/components/compare/CompareTray";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { getBrandLogo } from "@/lib/brand";
 import { IntroLoader } from "@/components/layout/IntroLoader";
 import { MotionProvider } from "@/components/ui/MotionProvider";
@@ -42,9 +43,9 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "Yamaha Motorcycles India: explore the lineup", template: "%s · Yamaha Motorcycles India" },
-  description: "An independent, unofficial concept website: explore Yamaha motorcycles and scooters, compare specifications and request a test ride in India.",
-  openGraph: { type: "website", siteName: "Yamaha Motorcycles India", locale: "en_IN" },
+  title: { default: "Yamaha Vignesh Bikez: explore the lineup", template: "%s · Yamaha Vignesh Bikez" },
+  description: "Vignesh Bikez, Yamaha showroom in Pondicherry: explore the latest Yamaha motorcycles and scooters, compare models, and request a test ride. Genuine accessories and reliable service.",
+  openGraph: { type: "website", siteName: "Yamaha Vignesh Bikez", locale: "en_IN" },
   robots: { index: true, follow: true },
 };
 export const viewport: Viewport = { themeColor: "#050C24", width: "device-width", initialScale: 1 };
@@ -71,6 +72,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <main id="main">{children}</main>
             <Footer />
             <CompareTray />
+            <WhatsAppButton />
           </CompareProvider>
         </I18nProvider>
         </MotionProvider>

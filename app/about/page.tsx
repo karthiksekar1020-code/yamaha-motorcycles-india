@@ -1,24 +1,42 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/ui/PageShell";
+import { ShowroomGallery } from "@/components/gallery/ShowroomGallery";
+import { SHOP, SHOP_ADDRESS_ONE_LINE, SHOP_MAP_URL } from "@/lib/config";
 
-export const metadata: Metadata = { title: "About", description: "About this independent motorcycle concept experience." };
+export const metadata: Metadata = {
+  title: "About",
+  description: "Vignesh Bikez is a Yamaha bike showroom in Pondicherry: the latest Yamaha motorcycles and scooters, genuine accessories and reliable customer service.",
+};
 
 export default function AboutPage() {
   return (
-    <PageShell eyebrow="The project" title="About">
-      <p>Yamaha Motorcycles India is an independent concept experience exploring how a motorcycle discovery site can feel: a dark studio, a rotatable machine, honest specifications and a clear path to a test ride.</p>
-      <p><strong className="text-fg">It is not an official Yamaha website.</strong> It is not affiliated with, endorsed by or operated by Yamaha Motor Co., Ltd. or any authorised Yamaha dealer. Yamaha, model names and related marks belong to their owners and appear here only to identify the motorcycles being discussed.</p>
-      <h2>How the data is handled</h2>
+    <PageShell eyebrow="About us" title="Vignesh Bikez">
+      <p>Vignesh Bikez is a Yamaha showroom in Puducherry (Pondicherry), on 100 Feet Road, Mudaliarpet. We help riders find the right Yamaha, from a first scooter for the city to a performance motorcycle for the weekend, and we look after it long after the day you ride it home.</p>
+
+      <h2>What we offer</h2>
       <ul>
-        <li>Specifications in this build are demonstration data. They are labelled as unverified. Prices are indicative ex-showroom (Delhi) figures from third-party listings, last checked on 9 October 2026; they are not from Yamaha and change often.</li>
-        <li>Missing values are shown as “Not available”, never filled with guesses.</li>
-        <li>Dealer listings come only from a verified data source. None is bundled.</li>
-        <li>The 3D model is an original placeholder; real assets need an appropriate licence.</li>
+        <li><strong className="text-fg">The latest Yamaha models.</strong> Sporty machines such as the R15 and MT-15, the FZ street range, and scooters including the Fascino, RayZR and Aerox 155. Browse the <Link href="/motorcycles">full lineup</Link> and <Link href="/compare">compare models</Link> side by side.</li>
+        <li><strong className="text-fg">Genuine accessories.</strong> Original Yamaha accessories and parts, so what goes on your bike fits properly and keeps its quality.</li>
+        <li><strong className="text-fg">Reliable customer service.</strong> Honest advice before you buy and friendly, dependable support after it.</li>
+        <li><strong className="text-fg">Test rides.</strong> Feel the bike before you decide. <Link href="/test-ride">Request a test ride</Link> or call the showroom.</li>
       </ul>
-      <h2>Design and engineering</h2>
-      <p>The interface favours precision: condensed display type, tabular numerals for specifications, restrained motion that respects reduced-motion settings, and a complete 2D fallback when WebGL is unavailable.</p>
-      <p><Link href="/motorcycles">Browse the lineup</Link> or <Link href="/test-ride">request a test ride</Link>.</p>
+
+      <ShowroomGallery inArticle />
+
+      <h2>Why riders choose us</h2>
+      <p>We keep things simple: clear answers on models and prices, no pressure, and a team that picks up the phone. Whether you are comparing the R15 with the MT-15 or choosing a scooter for the family, we will help you decide.</p>
+
+      <h2>Visit or call</h2>
+      <p>
+        <strong className="text-fg">{SHOP.name}</strong><br />
+        <a href={SHOP_MAP_URL} target="_blank" rel="noopener noreferrer">{SHOP_ADDRESS_ONE_LINE}</a><br />
+        {SHOP.phones.map((p, i) => <span key={p.tel}>{i > 0 && " · "}<a href={`tel:${p.tel}`}>{p.display}</a></span>)}
+      </p>
+      <p><Link href="/contact">Contact details and directions</Link></p>
+
+      <h2>Good to know</h2>
+      <p>Specifications, colours and prices shown on this site are for guidance and may change. Please confirm the current price and availability with the showroom. Yamaha, model names and related marks belong to Yamaha Motor Co., Ltd. and are used here to identify the motorcycles we sell. Product images are © Yamaha Motor India Pvt. Ltd.</p>
     </PageShell>
   );
 }
