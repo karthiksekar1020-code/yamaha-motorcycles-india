@@ -168,6 +168,16 @@ html[data-intro="play"] .brand-mark { opacity: 0; }
 
 /* Responsive safety net: a stray wide element can never make the page scroll sideways (clip, unlike hidden, keeps sticky/fixed working). */
 html, body { overflow-x: clip; }
+/* Small phones (under 400px): compact header so the logo, name, search, language and menu all stay on screen. */
+@media (max-width: 399px) {
+  header .container-x { padding-inline: .75rem; }
+  header .container-x > a { gap: .5rem; }
+  header .brand-mark { height: 2.25rem; }
+  .logo-lockup { column-gap: .3em; }
+  .logo-lockup .l1, .logo-lockup .l2 { font-size: .68rem; letter-spacing: .04em; }
+  .logo-lockup img { height: 1.75rem; }
+  header .container-x button { padding-inline: .4rem; }
+}
 /* Very narrow phones (under 350px): keep one line, just smaller, so the three header buttons still fit. */
 @media (max-width: 349px) {
   .logo-lockup .l1, .logo-lockup .l2 { font-size: .7rem; letter-spacing: .05em; }
@@ -176,7 +186,8 @@ html, body { overflow-x: clip; }
 /* Extremely narrow screens (foldables, 280-319px): shrink the header so the menu button stays on screen. */
 @media (max-width: 319px) {
   header .container-x { padding-inline: .75rem; }
-  .logo-lockup .l1, .logo-lockup .l2 { font-size: .65rem; letter-spacing: .04em; }
+  .logo-lockup .l1, .logo-lockup .l2 { font-size: .6rem; letter-spacing: .03em; }
+  .logo-lockup img { height: 1.5rem; }
   .brand-mark { height: 2rem; }
   header .container-x button { padding-inline: .35rem; }
 }
@@ -471,3 +482,6 @@ header nav[aria-label="Primary"] a[aria-current="page"] { text-shadow: 0 0 12px 
 
 /* Header only: let it use more width on large screens so the menu can sit in the true centre between the logo and the right-hand buttons. */
 @media (min-width: 1200px) { header .container-x { max-width: none; padding-inline: clamp(1.5rem, 2.5vw, 3rem); } }
+
+/* Tiny foldable screens (under 300px): drop the small skull mark so the menu button stays fully on screen. */
+@media (max-width: 299px) { .logo-lockup img { display: none; } }

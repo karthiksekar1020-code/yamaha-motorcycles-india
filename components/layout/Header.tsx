@@ -82,18 +82,18 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
       </header>
 
       <ModalDialog open={menu} onClose={() => setMenu(false)} label="Navigation menu" className="fixed inset-y-0 right-0 left-auto h-full w-[min(88vw,380px)]">
-        <div className="flex h-full flex-col border-l border-line bg-surface p-6">
-          <button onClick={() => setMenu(false)} aria-label={t("nav.closeMenu")} className="mb-8 self-end p-2"><X size={24} /></button>
+        <div className="flex h-full flex-col overflow-y-auto overscroll-contain border-l border-line bg-surface p-6 max-[760px]:p-5">
+          <button onClick={() => setMenu(false)} aria-label={t("nav.closeMenu")} className="mb-8 shrink-0 self-end p-2 max-[760px]:mb-3"><X size={24} /></button>
           <nav aria-label="Mobile" className="flex flex-col">
             {nav.map((n) => (
-              <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined} className="display border-b border-line py-4 text-3xl aria-[current=page]:text-blue-bright">{label(n)}</Link>
+              <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined} className="display border-b border-line py-4 text-3xl max-[760px]:py-2.5 max-[760px]:text-2xl aria-[current=page]:text-blue-bright">{label(n)}</Link>
             ))}
           </nav>
-          <div className="mt-6 space-y-3 text-sm">
+          <div className="mt-6 shrink-0 space-y-3 text-sm max-[760px]:mt-4 max-[760px]:space-y-2">
             {SHOP.phones.map((p) => <a key={p.tel} href={`tel:${p.tel}`} className="flex items-center gap-2 text-fg"><Phone size={16} aria-hidden />{p.display}</a>)}
             <a href={SHOP_MAP_URL} target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-muted"><MapPin size={16} className="mt-0.5 shrink-0" aria-hidden />{SHOP_ADDRESS_ONE_LINE}</a>
           </div>
-          <Link href="/test-ride" className="btn mt-auto">{t("nav.requestTestRide")}</Link>
+          <div className="mt-auto shrink-0 pt-6"><Link href="/test-ride" className="btn w-full">{t("nav.requestTestRide")}</Link></div>
         </div>
       </ModalDialog>
 

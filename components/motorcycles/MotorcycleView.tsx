@@ -18,7 +18,7 @@ export function MotorcycleView({ m, related }: { m: Motorcycle; related: Motorcy
               <p className="micro">{m.category} · {m.market} market</p>
               <h1 className="display mt-2 text-4xl md:text-6xl">{m.name}</h1>
             </div>
-            <div className="flex gap-3"><CompareToggle slug={m.slug} name={m.name} /><Link href={`/test-ride?model=${m.slug}`} className="btn">Request test ride</Link></div>
+            <div className="flex flex-wrap gap-3"><CompareToggle slug={m.slug} name={m.name} /><Link href={`/test-ride?model=${m.slug}`} className="btn whitespace-nowrap">Request test ride</Link></div>
           </div>
         </div>
         <div className="container-x mt-8"><MediaStage m={m} /></div>
