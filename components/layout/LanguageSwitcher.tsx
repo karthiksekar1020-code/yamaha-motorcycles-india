@@ -26,7 +26,7 @@ export function LanguageSwitcher() {
       <button
         type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="menu" aria-expanded={open} aria-controls={id}
         aria-label={`${t("nav.language")}: ${current.label}`}
-        className="flex h-10 items-center gap-1.5 px-2.5 text-xs font-semibold uppercase tracking-[.12em] hover:text-blue-bright"
+        className="flex h-10 items-center gap-1.5 px-1.5 text-xs font-semibold uppercase tracking-[.12em] hover:text-blue-bright"
       >
         <Globe size={18} aria-hidden /><span>{current.short}</span>
       </button>

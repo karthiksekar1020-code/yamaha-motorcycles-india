@@ -109,7 +109,8 @@ html[data-script="indic"] header nav[aria-label="Primary"] { gap: 1.25rem; }
 .logo-lockup { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; column-gap: .5em; white-space: nowrap; line-height: 1.02; color: var(--text-primary); }
 .logo-lockup .l1, .logo-lockup .l2 { font-size: clamp(.8rem, 3.6vw, 1rem); letter-spacing: .1em; white-space: nowrap; }
 @media (min-width: 640px) { .logo-lockup .l1, .logo-lockup .l2 { font-size: 1.15rem; letter-spacing: .12em; } }
-@media (min-width: 1280px) { .logo-lockup .l1, .logo-lockup .l2 { font-size: 1.5rem; letter-spacing: .14em; } }
+@media (min-width: 1024px) and (max-width: 1199px) { .logo-lockup .l1, .logo-lockup .l2 { font-size: .95rem; letter-spacing: .08em; } .logo-lockup { column-gap: .35em; } }
+@media (min-width: 1340px) { .logo-lockup .l1, .logo-lockup .l2 { font-size: 1.5rem; letter-spacing: .14em; } }
 html[data-script="indic"] .logo-lockup .l1, html[data-script="indic"] .logo-lockup .l2 { letter-spacing: .02em; }
 
 /* Intro animation (components/layout/IntroLoader.tsx): hide the real logo while the intro word flies to it. */
@@ -467,3 +468,6 @@ header nav[aria-label="Primary"] a[aria-current="page"] { text-shadow: 0 0 12px 
   .contact-card .icon-ring { transform-origin: 50% 0; animation: icon-ring 3.6s ease-in-out 1.2s infinite; }
   .contact-card .icon-pin { animation: pin-bounce 3.6s ease-in-out 1.6s infinite; }
 }
+
+/* Header only: let it use more width on large screens so the menu can sit in the true centre between the logo and the right-hand buttons. */
+@media (min-width: 1200px) { header .container-x { max-width: none; padding-inline: clamp(1.5rem, 2.5vw, 3rem); } }
