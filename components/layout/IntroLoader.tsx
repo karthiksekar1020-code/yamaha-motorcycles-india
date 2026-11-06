@@ -40,7 +40,7 @@ export function IntroLoader({ brand = "YAMAHA", oncePerSession = true, logoSrc =
     (async () => {
       try { await document.fonts.ready; } catch {}
       const word = wordRef.current;
-      const target = document.querySelector<HTMLElement>(".logo-lockup .l1"); // the intro word is just YAMAHA
+      const target = Array.from(document.querySelectorAll<HTMLElement>(".logo-lockup .l1")).find((e) => e.getBoundingClientRect().width > 0) ?? null; // the intro word is just YAMAHA
       if (cancelled || !word || !target) return;
 
       // Copy the logo's typography so both render the same glyph shapes.
@@ -63,7 +63,7 @@ export function IntroLoader({ brand = "YAMAHA", oncePerSession = true, logoSrc =
       const end = { x: r.left, y: r.top, scale: r.width / ww };
 
       // Brand mark (optional): spins in above the centred name, then flies to the header mark with the word.
-      const markTarget = logoSrc ? document.querySelector<HTMLElement>(".brand-mark") : null;
+      const markTarget = logoSrc ? Array.from(document.querySelectorAll<HTMLElement>(".brand-mark")).find((e) => e.getBoundingClientRect().width > 0) ?? null : null;
       let mark: Frames["mark"] = null;
       if (markTarget) {
         const mr = markTarget.getBoundingClientRect();

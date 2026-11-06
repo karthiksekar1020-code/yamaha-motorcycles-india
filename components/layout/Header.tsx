@@ -52,12 +52,12 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
         <div className="container-x flex h-[72px] items-center justify-between min-[1500px]:grid min-[1500px]:grid-cols-[minmax(max-content,1fr)_auto_minmax(max-content,1fr)] min-[1500px]:gap-x-5">
           <Link href="/" className="display flex shrink-0 items-center gap-3" aria-label="Yamaha Vignesh Bikez, home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            {logoSrc && <img src={logoSrc} alt="" width={48} height={48} className="brand-mark h-11 w-auto shrink-0 md:h-12" />}
+            {logoSrc && <img src={logoSrc} alt="" width={48} height={48} className="brand-mark h-11 w-auto shrink-0 md:h-12 min-[1200px]:hidden" />}
             <span className="logo-lockup whitespace-nowrap">
-              <span className="l1">YAMAHA</span>
+              <span className="l1 min-[1200px]:hidden">YAMAHA</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/vignesh-logo-white.png" alt="" width={45} height={85} className="h-9 w-auto shrink-0 sm:h-10 md:h-12 min-[1200px]:hidden" />
-              <span className="l2 min-[1200px]:hidden">{t("brand.tag")}</span>
+              <img src="/images/vignesh-logo-white.png" alt="" width={98} height={170} className="h-9 w-auto shrink-0 sm:h-10 md:h-12" />
+              <span className="l2">{t("brand.tag")}</span>
             </span>
           </Link>
           <nav aria-label="Primary" className="hidden items-center gap-3 lg:flex min-[1200px]:gap-5 xl:gap-8">
@@ -74,8 +74,8 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
             <LanguageSwitcher />
             <Link href="/test-ride" className="btn btn-sm ml-1.5 whitespace-nowrap max-sm:hidden!">{t("nav.testRide")}</Link>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/vignesh-logo-white.png" alt="" width={45} height={85} className="ml-3 hidden h-12 w-auto shrink-0 min-[1200px]:block" />
-            <span style={{ letterSpacing: ".14em" }} className="display ml-2 hidden whitespace-nowrap text-lg text-fg min-[1200px]:block">{t("brand.tag")}</span>
+            {logoSrc && <img src={logoSrc} alt="" width={48} height={48} className="brand-mark ml-4 hidden h-12 w-auto shrink-0 min-[1200px]:block" />}
+            <span className="logo-lockup display ml-3 hidden whitespace-nowrap min-[1200px]:block" aria-hidden><span className="l1">YAMAHA</span></span>
             <button onClick={() => setMenu(true)} aria-label={t("nav.openMenu")} aria-haspopup="dialog" className="p-2.5 lg:hidden"><Menu size={22} /></button>
           </div>
         </div>
