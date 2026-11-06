@@ -56,7 +56,7 @@ export function Header({ logoSrc = null, nav = DEFAULT_NAV }: { logoSrc?: string
             <span className="logo-lockup whitespace-nowrap">
               <span className="l1 min-[1200px]:hidden">YAMAHA</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/vignesh-logo-white.png" alt="" width={98} height={170} className="h-9 w-auto shrink-0 sm:h-10 md:h-12" />
+              <img src="/images/vignesh-skull.png" alt="" width={98} height={170} className="h-9 w-auto shrink-0 sm:h-10 md:h-12" />
               <span className="l2">{t("brand.tag")}</span>
             </span>
           </Link>
