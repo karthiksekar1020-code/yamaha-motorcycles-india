@@ -2,10 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { isLang, LANGS, MESSAGES } from "@/lib/i18n/messages";
 import { REFRESH_GOES_HOME, INTRO_ONCE_PER_SESSION } from "@/lib/config";
-import {
-  Barlow_Condensed, Inter, Noto_Sans_Devanagari, Noto_Sans_Bengali, Noto_Sans_Telugu, Noto_Sans_Tamil,
-  Noto_Sans_Gujarati, Noto_Sans_Kannada, Noto_Sans_Malayalam, Noto_Sans_Gurmukhi, Noto_Sans_Oriya,
-} from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/components/i18n/I18nProvider";
 import { CompareProvider } from "@/components/compare/CompareProvider";
@@ -20,20 +16,12 @@ import type { PublishedContent } from "@/lib/content/schema";
 import { contentToEnglishOverrides, DEFAULT_NAVIGATION, NAV_LABEL_KEY, type NavigationContent } from "@/lib/content/schema";
 import type { NavItem } from "@/components/layout/Header";
 
-const barlow = Barlow_Condensed({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-barlow", display: "swap" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-// Script fonts for the Indian languages. The Latin display/body fonts have no glyphs for them.
-// preload is off so a page only downloads the font for the language actually in use.
-const deva = Noto_Sans_Devanagari({ subsets: ["devanagari"], variable: "--font-deva", weight: ["400", "600", "700"], display: "swap", preload: false });
-const bengali = Noto_Sans_Bengali({ subsets: ["bengali"], variable: "--font-bn", weight: ["400", "600", "700"], display: "swap", preload: false });
-const telugu = Noto_Sans_Telugu({ subsets: ["telugu"], variable: "--font-te", weight: ["400", "600", "700"], display: "swap", preload: false });
-const tamil = Noto_Sans_Tamil({ subsets: ["tamil"], variable: "--font-ta", weight: ["400", "600", "700"], display: "swap", preload: false });
-const gujarati = Noto_Sans_Gujarati({ subsets: ["gujarati"], variable: "--font-gu", weight: ["400", "600", "700"], display: "swap", preload: false });
-const kannada = Noto_Sans_Kannada({ subsets: ["kannada"], variable: "--font-kn", weight: ["400", "600", "700"], display: "swap", preload: false });
-const malayalam = Noto_Sans_Malayalam({ subsets: ["malayalam"], variable: "--font-ml", weight: ["400", "600", "700"], display: "swap", preload: false });
-const gurmukhi = Noto_Sans_Gurmukhi({ subsets: ["gurmukhi"], variable: "--font-pa", weight: ["400", "600", "700"], display: "swap", preload: false });
-const oriya = Noto_Sans_Oriya({ subsets: ["oriya"], variable: "--font-or", weight: ["400", "600", "700"], display: "swap", preload: false });
-const scriptFonts = [deva, bengali, telugu, tamil, gujarati, kannada, malayalam, gurmukhi, oriya].map((x) => x.variable).join(" ");
+// Fonts load in the visitor's browser from Google Fonts (not at build time), so the build needs no internet access.
+// Script fonts cover the Indian languages, which the Latin display/body fonts have no glyphs for. The browser only
+// downloads the font files for scripts actually used on the page.
+const FONT_FAMILIES = ["Barlow+Condensed:wght@500;600;700", "Inter:wght@400;500;600;700", ...["Devanagari", "Bengali", "Telugu", "Tamil", "Gujarati", "Kannada", "Malayalam", "Gurmukhi", "Oriya"].map((n) => `Noto+Sans+${n}:wght@400;600;700`)];
+const FONTS_HREF = `https://fonts.googleapis.com/css2?${FONT_FAMILIES.map((f) => `family=${f}`).join("&")}&display=swap`;
+const FONT_VARS = `:root{--font-barlow:"Barlow Condensed";--font-inter:"Inter";--font-deva:"Noto Sans Devanagari";--font-bn:"Noto Sans Bengali";--font-te:"Noto Sans Telugu";--font-ta:"Noto Sans Tamil";--font-gu:"Noto Sans Gujarati";--font-kn:"Noto Sans Kannada";--font-ml:"Noto Sans Malayalam";--font-pa:"Noto Sans Gurmukhi";--font-or:"Noto Sans Oriya"}`;
 
 
 // Static string, no user input: sends a browser *reload* to the home page, at the top.
@@ -61,8 +49,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const navConfig = (content.navigation as NavigationContent | undefined) ?? DEFAULT_NAVIGATION;
   const nav: NavItem[] = navConfig.items.filter((i) => i.visible).map((i) => ({ href: i.href, key: NAV_LABEL_KEY[i.href], label: i.label }));
   return (
-    <html suppressHydrationWarning lang={tag} data-script={lang === "en" ? "latin" : "indic"} className={`${barlow.variable} ${inter.variable} ${scriptFonts}`}>
-      {REFRESH_GOES_HOME && <head><script dangerouslySetInnerHTML={{ __html: REFRESH_SCRIPT }} /></head>}
+    <html suppressHydrationWarning lang={tag} data-script={lang === "en" ? "latin" : "indic"}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={FONTS_HREF} />
+        <style dangerouslySetInnerHTML={{ __html: FONT_VARS }} />
+        {REFRESH_GOES_HOME && <script dangerouslySetInnerHTML={{ __html: REFRESH_SCRIPT }} />}
+      </head>
       <body>
         <MotionProvider>
         <IntroLoader oncePerSession={INTRO_ONCE_PER_SESSION} logoSrc={logoSrc} />
