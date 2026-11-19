@@ -1,12 +1,16 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { testRideSchema, TIME_WINDOWS, type TestRideInput } from "@/lib/validation/test-ride";
+import { searchDealers } from "@/lib/dealers/repository";
+import { WHATSAPP_NUMBER } from "@/lib/config";
 import type { Dealer } from "@/types/dealer";
 
-type Result = { kind: "success"; ref: string; message: string } | { kind: "error"; message: string } | null;
+type Result = { kind: "success"; whatsappUrl: string } | null;
+
+const cap = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
 function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
   return (
@@ -19,7 +23,7 @@ function Field({ id, label, error, children }: { id: string; label: string; erro
 }
 
 export function TestRideForm({ models, defaultModel }: { models: { slug: string; name: string }[]; defaultModel?: string }) {
-  const { register, handleSubmit, setError, watch, reset, setFocus, formState: { errors, isSubmitting } } = useForm<TestRideInput>({
+  const { register, handleSubmit, watch, reset, formState: { errors, isSubmitting } } = useForm<TestRideInput>({
     resolver: zodResolver(testRideSchema),
     defaultValues: { motorcycleSlug: models.some((m) => m.slug === defaultModel) ? defaultModel : "", dealerId: "", website: "" },
   });
@@ -28,52 +32,53 @@ export function TestRideForm({ models, defaultModel }: { models: { slug: string;
   const [dealerNote, setDealerNote] = useState("Enter your city to see available dealerships.");
   const city = watch("city");
   const today = new Date().toISOString().slice(0, 10);
-  const alertRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!city || city.trim().length < 2) { setDealers(null); return; }
-    const ctl = new AbortController();
+    let cancelled = false;
     const t = setTimeout(async () => {
       try {
-        const r = await fetch(`/api/dealers?q=${encodeURIComponent(city.trim())}`, { signal: ctl.signal });
-        if (r.status === 503) { setDealers(null); setDealerNote("Dealer selection isn’t available yet. Your request will be recorded without a dealer."); return; }
-        if (!r.ok) throw new Error();
-        const list: Dealer[] = ((await r.json()).dealers as Dealer[]).filter((d) => d.isVerified); // unverified listings are not offered here
+        const r = await searchDealers(city.trim());
+        if (cancelled) return;
+        if (r.status !== "ok") { setDealers(null); setDealerNote("Dealer selection isn’t available yet. Your request will be sent without a dealer."); return; }
+        const list = r.dealers.filter((d) => d.isVerified); // unverified listings are not offered here
         setDealers(list);
         setDealerNote(list.length ? "" : "No verified dealers found for that city. You can still submit without one.");
-      } catch (e) {
-        if ((e as Error).name !== "AbortError") { setDealers(null); setDealerNote("Couldn’t load dealers. You can still submit."); }
+      } catch {
+        if (!cancelled) { setDealers(null); setDealerNote("Couldn’t load dealers. You can still submit."); }
       }
     }, 400);
-    return () => { clearTimeout(t); ctl.abort(); };
+    return () => { clearTimeout(t); cancelled = true; };
   }, [city]);
 
-  const onSubmit = handleSubmit(async (values) => {
-    setResult(null);
-    try {
-      const res = await fetch("/api/test-ride", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(values) });
-      const body = await res.json().catch(() => ({}));
-      if (res.ok) { setResult({ kind: "success", ref: body.referenceCode, message: body.message }); reset(); return; }
-      if (res.status === 422 && body.error?.fields) {
-        for (const [k, msg] of Object.entries(body.error.fields)) setError(k as keyof TestRideInput, { message: String(msg) });
-        const first = Object.keys(body.error.fields)[0] as keyof TestRideInput | undefined;
-        if (first) setFocus(first);
-        return;
-      }
-      setResult({ kind: "error", message: body.error?.message ?? "Something went wrong. Please try again." });
-    } catch {
-      setResult({ kind: "error", message: "Network error. Check your connection and try again." });
-    }
-    alertRef.current?.focus();
+  // There is no server to store requests, so the filled-in enquiry is sent to the showroom on WhatsApp.
+  const onSubmit = handleSubmit((values) => {
+    const bike = models.find((m) => m.slug === values.motorcycleSlug)?.name ?? values.motorcycleSlug;
+    const dealer = dealers?.find((d) => d.id === values.dealerId);
+    const text = [
+      "Test ride request",
+      `Name: ${values.fullName}`,
+      `Mobile: ${values.mobile}`,
+      `Email: ${values.email}`,
+      `City: ${values.city}`,
+      `Model: ${bike}`,
+      dealer ? `Dealership: ${dealer.name}, ${dealer.city}` : "",
+      `Preferred date: ${values.preferredDate}`,
+      `Time: ${cap(values.preferredTimeWindow)}`,
+    ].filter(Boolean).join("\n");
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    setResult({ kind: "success", whatsappUrl });
+    reset();
   });
 
   if (result?.kind === "success") {
     return (
       <div role="status" className="border border-ok/50 bg-ok/10 p-8">
-        <p className="micro !text-ok">Request received</p>
-        <h2 className="display mt-2 text-3xl md:text-4xl">Reference {result.ref}</h2>
-        <p className="mt-4 max-w-lg text-sm text-muted">{result.message}</p>
-        <div className="mt-6 flex gap-3"><Link href="/motorcycles" className="btn">Keep exploring</Link><button className="btn btn-ghost" onClick={() => setResult(null)}>New request</button></div>
+        <p className="micro !text-ok">One more step</p>
+        <h2 className="display mt-2 text-3xl md:text-4xl">Send it on WhatsApp</h2>
+        <p className="mt-4 max-w-lg text-sm text-muted">WhatsApp should have opened with your request ready to send. If it didn’t, use the button below. A representative will contact you once the message is sent. This is an enquiry, not a confirmed booking.</p>
+        <div className="mt-6 flex flex-wrap gap-3"><a href={result.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn">Open WhatsApp</a><Link href="/motorcycles" className="btn btn-ghost">Keep exploring</Link><button className="btn btn-ghost" onClick={() => setResult(null)}>New request</button></div>
       </div>
     );
   }
@@ -82,9 +87,6 @@ export function TestRideForm({ models, defaultModel }: { models: { slug: string;
 
   return (
     <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-5 md:grid-cols-2">
-      {result?.kind === "error" && (
-        <div ref={alertRef} tabIndex={-1} role="alert" className="border border-danger/60 bg-danger/10 p-4 text-sm md:col-span-2">{result.message}</div>
-      )}
       <Field id="fullName" label="Full name" error={errors.fullName?.message}><input id="fullName" autoComplete="name" className="field" {...inv("fullName")} {...register("fullName")} /></Field>
       <Field id="mobile" label="Mobile number" error={errors.mobile?.message}><input id="mobile" type="tel" inputMode="tel" autoComplete="tel" placeholder="98765 43210" className="field" {...inv("mobile")} {...register("mobile")} /></Field>
       <Field id="email" label="Email address" error={errors.email?.message}><input id="email" type="email" autoComplete="email" className="field" {...inv("email")} {...register("email")} /></Field>
@@ -120,8 +122,8 @@ export function TestRideForm({ models, defaultModel }: { models: { slug: string;
         {errors.consent && <p id="consent-err" role="alert" className="mt-1 text-xs text-danger">{errors.consent.message}</p>}
       </div>
       <div className="md:col-span-2">
-        <button type="submit" className="btn" disabled={isSubmitting}>{isSubmitting ? "Submitting…" : "Request test ride"}</button>
-        <p className="mt-3 text-xs text-muted">Submitting creates an enquiry only. It is not a confirmed booking until a representative contacts you.</p>
+        <button type="submit" className="btn" disabled={isSubmitting}>{isSubmitting ? "Opening…" : "Request test ride"}</button>
+        <p className="mt-3 text-xs text-muted">This opens WhatsApp with your request ready to send. It is an enquiry only, not a confirmed booking until a representative contacts you.</p>
       </div>
     </form>
   );

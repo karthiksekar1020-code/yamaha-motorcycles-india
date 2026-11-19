@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import type { Motorcycle } from "@/types/motorcycle";
+import { listMotorcycles } from "@/lib/motorcycles/repository";
+import { parseCatalogueQuery } from "@/lib/validation/catalogue";
 
 /** Compact search panel that drops down under the header, leaving the page visible behind it. */
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -21,18 +23,18 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
 
   useEffect(() => {
     if (q.trim().length < 2) { setResults(null); setFailed(false); return; }
-    const ctl = new AbortController();
+    let cancelled = false;
     const t = setTimeout(async () => {
       try {
-        const r = await fetch(`/api/motorcycles?q=${encodeURIComponent(q.trim())}&pageSize=6`, { signal: ctl.signal });
-        if (!r.ok) throw new Error();
-        setResults((await r.json()).items);
+        const r = await listMotorcycles(parseCatalogueQuery({ q: q.trim(), pageSize: "6" }));
+        if (cancelled) return;
+        setResults(r.items);
         setFailed(false);
-      } catch (e) {
-        if ((e as Error).name !== "AbortError") setFailed(true);
+      } catch {
+        if (!cancelled) setFailed(true);
       }
     }, 200);
-    return () => { clearTimeout(t); ctl.abort(); };
+    return () => { clearTimeout(t); cancelled = true; };
   }, [q]);
 
   return (

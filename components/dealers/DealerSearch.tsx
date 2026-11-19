@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import type { Dealer } from "@/types/dealer";
+import { searchDealers } from "@/lib/dealers/repository";
 
 type State =
   | { kind: "idle" }
@@ -21,11 +22,10 @@ export function DealerSearch() {
     setFieldError("");
     setState({ kind: "loading" });
     try {
-      const r = await fetch(`/api/dealers?q=${encodeURIComponent(term)}`);
-      const body = await r.json().catch(() => ({}));
-      if (r.status === 503 && body.error?.code === "DEALER_DATA_NOT_CONFIGURED") { setState({ kind: "error", setup: true, message: "" }); return; }
-      if (!r.ok) throw new Error(body.error?.message);
-      setState({ kind: "results", dealers: body.dealers });
+      const r = await searchDealers(term);
+      if (r.status === "not-configured") { setState({ kind: "error", setup: true, message: "" }); return; }
+      if (r.status === "error") throw new Error();
+      setState({ kind: "results", dealers: r.dealers });
     } catch (err) {
       setState({ kind: "error", message: (err as Error).message || "Dealer search failed. Please try again." });
     }

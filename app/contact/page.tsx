@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
   return (
     <PageShell eyebrow="Get in touch" title="Contact">
       <p>Talk to the team at {SHOP.name} about models, prices, test rides, genuine accessories or service. Call us or visit the showroom.</p>
@@ -22,7 +21,6 @@ export default function ContactPage() {
               <li key={p.tel} className="!ml-0 !list-none"><a href={`tel:${p.tel}`} className="contact-link text-lg !text-fg">{p.display}</a></li>
             ))}
           </ul>
-          {email && <p className="mt-3">Email: <a href={`mailto:${email}`}>{email}</a></p>}
         </div>
         <div className="contact-card border border-line bg-elevated p-5 text-sm">
           <p className="micro flex items-center gap-2 !text-fg"><MapPin size={14} className="icon-pin" aria-hidden /> Visit the showroom</p>

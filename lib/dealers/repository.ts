@@ -1,4 +1,3 @@
-import "server-only";
 import type { Dealer } from "../../types/dealer";
 import { LOCAL_DEALERS } from "./data";
 import { cityMatches } from "./match";

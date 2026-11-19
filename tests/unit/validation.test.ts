@@ -1,6 +1,5 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { normalizeIndianMobile, testRideSchema } from "@/lib/validation/test-ride";
-import { __resetRateLimit, rateLimit } from "@/lib/security/rate-limit";
 
 const future = () => new Date(Date.now() + 5 * 86400000).toISOString().slice(0, 10);
 const valid = () => ({
@@ -26,20 +25,4 @@ describe("testRideSchema", () => {
   });
   it("rejects a filled honeypot", () => expect(testRideSchema.safeParse({ ...valid(), website: "http://spam" }).success).toBe(false));
   it("rejects a malformed dealer id", () => expect(testRideSchema.safeParse({ ...valid(), dealerId: "not-a-uuid" }).success).toBe(false));
-});
-
-describe("rateLimit", () => {
-  afterEach(() => __resetRateLimit());
-  it("blocks after the limit and recovers after the window", () => {
-    for (let i = 0; i < 3; i++) expect(rateLimit("k", 3, 1000, 0).ok).toBe(true);
-    const blocked = rateLimit("k", 3, 1000, 10);
-    expect(blocked.ok).toBe(false);
-    expect(blocked.retryAfterSec).toBeGreaterThan(0);
-    expect(rateLimit("k", 3, 1000, 1500).ok).toBe(true);
-  });
-  it("tracks keys independently", () => {
-    rateLimit("a", 1, 1000, 0);
-    expect(rateLimit("a", 1, 1000, 1).ok).toBe(false);
-    expect(rateLimit("b", 1, 1000, 1).ok).toBe(true);
-  });
 });

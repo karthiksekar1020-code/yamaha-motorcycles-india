@@ -104,7 +104,7 @@ test("model detail is data-driven; unknown slug is 404", async ({ page }) => {
   await expect(page.getByText(/off the map/i)).toBeVisible();
 });
 
-test("test-ride form validates and never fakes success without a database", async ({ page }) => {
+test("test-ride form validates, then hands the request to WhatsApp", async ({ page }) => {
   await page.goto("/test-ride?model=r15-v4");
   await page.getByRole("button", { name: /request test ride/i }).click();
   await expect(page.getByText("Enter your full name")).toBeVisible();
@@ -119,8 +119,9 @@ test("test-ride form validates and never fakes success without a database", asyn
   await page.getByLabel(/time window/i).selectOption("morning");
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: /request test ride/i }).click();
-  await expect(page.getByRole("alert").filter({ hasText: /database is not configured/i })).toBeVisible();
-  await expect(page.getByText(/request received/i)).toHaveCount(0);
+  const wa = page.getByRole("link", { name: /open whatsapp/i });
+  await expect(wa).toBeVisible();
+  await expect(wa).toHaveAttribute("href", /^https:\/\/wa\.me\/\d+\?text=/);
 });
 
 test("dealers search labels unverified listings and never invents dealers", async ({ page }) => {
@@ -166,13 +167,4 @@ test("mobile navigation drawer works", async ({ page, isMobile }) => {
   await expect(page).toHaveURL(/\/gallery/);
   const noHScroll = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
   expect(noHScroll).toBe(true);
-});
-
-test("API surfaces", async ({ request }) => {
-  expect((await request.get("/api/health")).ok()).toBe(true);
-  const list = await request.get("/api/motorcycles?category=Street");
-  expect((await list.json()).items.length).toBeGreaterThan(0);
-  expect((await request.get("/api/motorcycles?minCc=abc")).status()).toBe(400);
-  expect((await request.get("/api/motorcycles/nope")).status()).toBe(404);
-  expect((await request.get("/api/dealers?q=a")).status()).toBe(400);
 });

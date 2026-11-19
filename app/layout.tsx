@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { isLang, LANGS, MESSAGES } from "@/lib/i18n/messages";
-import { REFRESH_GOES_HOME, INTRO_ONCE_PER_SESSION } from "@/lib/config";
+import { REFRESH_GOES_HOME, INTRO_ONCE_PER_SESSION, SITE_URL } from "@/lib/config";
 import "./globals.css";
 import { I18nProvider } from "@/components/i18n/I18nProvider";
 import { CompareProvider } from "@/components/compare/CompareProvider";
@@ -27,10 +27,9 @@ const FONT_VARS = `:root{--font-barlow:"Barlow Condensed";--font-inter:"Inter";-
 // Static string, no user input: sends a browser *reload* to the home page, at the top.
 const REFRESH_SCRIPT = `(function(){try{var n=performance.getEntriesByType("navigation")[0];if(!n||n.type!=="reload")return;if(location.pathname.indexOf("/admin")===0)return;if(location.pathname!=="/"||location.search||location.hash){location.replace("/");return}history.scrollRestoration="manual";var top=function(){scrollTo(0,0)};addEventListener("load",function(){top();setTimeout(top,120);setTimeout(top,500);setTimeout(function(){history.scrollRestoration="auto"},1500)})}catch(e){}})();`;
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: { default: "Yamaha Vignesh Bikez: explore the lineup", template: "%s · Yamaha Vignesh Bikez" },
   description: "Vignesh Bikez, Yamaha showroom in Pondicherry: explore the latest Yamaha motorcycles and scooters, compare models, and request a test ride. Genuine accessories and reliable service.",
   openGraph: { type: "website", siteName: "Yamaha Vignesh Bikez", locale: "en_IN" },

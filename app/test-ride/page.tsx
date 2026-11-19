@@ -4,7 +4,6 @@ import { getAllMotorcycles } from "@/lib/motorcycles/repository";
 import { TestRideForm } from "@/components/forms/TestRideForm";
 
 export const metadata: Metadata = { title: "Request a test ride", description: "Request a motorcycle test ride. Enquiries are reviewed and confirmed by a representative." };
-export const dynamic = "force-dynamic";
 
 export default async function TestRidePage({ searchParams }: { searchParams: Promise<{ model?: string }> }) {
   const { model } = await searchParams;

@@ -12,6 +12,9 @@ export const REFRESH_GOES_HOME = true;
  */
 export const INTRO_ONCE_PER_SESSION = false;
 
+/** Public site address, used for canonical links, the sitemap and robots.txt. Change it here if the domain changes. */
+export const SITE_URL = "https://vigneshbikez.in";
+
 /** Dealership details shown in the header, footer, Contact page and About page. Edit here to change them everywhere. */
 export const SHOP = {
   name: "Vignesh Bikez - Yamaha, Pondicherry",

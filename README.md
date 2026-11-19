@@ -1,16 +1,15 @@
 # Yamaha Vignesh Bikez (unofficial concept website)
 
-A Next.js app with a searchable catalogue, official product photos (two per model where available), a comparison engine, dealer search and a server-backed test-ride enquiry flow. Target market: India. **Not affiliated with Yamaha Motor Co., Ltd.**
+A Next.js app with a searchable catalogue, official product photos (two per model where available), a comparison engine, dealer search and a test-ride enquiry form that sends the request through WhatsApp. This is the **frontend-only** version: there is no backend, no API routes and no database. Target market: India. **Not affiliated with Yamaha Motor Co., Ltd.**
 
 ## Quick start
 
 ```bash
 npm install
-cp .env.example .env.local     # optional: site URL
 npm run dev                    # http://localhost:3000
 ```
 
-The site runs entirely on the built-in **labelled demo dataset**. There is no database or login: the test-ride form returns an explicit "no backend connected" error (it never pretends to save), and dealer search shows only the local list in `lib/dealers/data.ts`.
+The site runs entirely on the built-in **labelled demo dataset**. There is no database, login or server code to run: the test-ride form opens WhatsApp with the request ready to send, and dealer search shows only the local list in `lib/dealers/data.ts`. No environment variables are needed; the site address is set in `lib/config.ts` (`SITE_URL`).
 
 ## Scripts
 
@@ -19,17 +18,16 @@ The site runs entirely on the built-in **labelled demo dataset**. There is no da
 | `npm run dev` / `build` / `start` | Develop / production build / serve |
 | `npm run typecheck` | `tsc --noEmit` (strict) |
 | `npm run lint` | ESLint |
-| `npm test` | Vitest: unit, integration and database (RLS) tests |
+| `npm test` | Vitest unit tests |
 | `npx playwright install chromium` then `npm run build && npm run test:e2e` | Browser tests (desktop + mobile) |
 
 ## Architecture
 
-- `app/` routes: `/`, `/motorcycles`, `/motorcycles/[slug]`, `/compare`, `/experience` (Studio), `/gallery`, `/dealers`, `/test-ride`, `/about`, `/contact`, `/privacy`, `/terms`, plus `/api/{motorcycles,motorcycles/[slug],dealers,test-ride,health}`, sitemap and robots.
+- `app/` routes: `/`, `/motorcycles`, `/motorcycles/[slug]`, `/compare`, `/experience` (Studio), `/gallery`, `/dealers`, `/test-ride`, `/about`, `/contact`, `/privacy`, `/terms`, sitemap and robots. There are no `/api` routes.
 - Server Components by default; Client Components only for interaction.
 - `lib/motorcycles/repository.ts` serves the built-in demo dataset. `query.ts` holds the pure, tested filter/sort/pagination logic.
-- `lib/validation/*`: Zod schemas shared by client and server; the server re-validates everything.
-- `lib/security/rate-limit.ts`: in-memory limiter (per instance only; use a shared store such as Redis for multi-instance deployments).
-- Security headers in `next.config.ts`; the service-role key is server-only.
+- `lib/validation/*`: Zod schemas for the test-ride form and the catalogue filters (run in the browser and when pages render).
+- Security headers and the Content-Security-Policy are in `next.config.ts`.
 
 ## Images
 
@@ -46,13 +44,12 @@ The motorcycle records are **demo data**: no prices, availability `unverified`, 
 
 ## Deploying
 
-Any Node host or Vercel: set the variables from `.env.example`, `npm run build`, `npm start`. Set `NEXT_PUBLIC_SITE_URL` and optionally `NEXT_PUBLIC_CONTACT_EMAIL`.
+Any Node host (including Hostinger Node.js hosting) or Vercel: `npm install`, `npm run build`, `npm start`. No environment variables are required. If the domain changes, edit `SITE_URL` in `lib/config.ts`.
 
 ## Production-launch checklist
 
 - Verified data, real contact details, legal review of Privacy/Terms (DPDP Act 2023), retention policy.
-- Shared-store rate limiting; consider CAPTCHA in addition to the honeypot.
-- A backend to store test-ride requests, plus email/CRM notification.
+- Test-ride requests are not stored anywhere; they are sent by WhatsApp. Add a backend if you need to store them or send email/CRM notifications.
 - Lighthouse measurement on the deployed site (not yet measured), error monitoring, backups.
 
 ## Languages

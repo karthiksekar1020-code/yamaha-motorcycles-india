@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { DEMO_MOTORCYCLES } from "@/lib/motorcycles/data";
 
-const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+import { SITE_URL as base } from "@/lib/config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = ["", "/motorcycles", "/experience", "/compare", "/gallery", "/dealers", "/test-ride", "/about", "/contact", "/terms"];
